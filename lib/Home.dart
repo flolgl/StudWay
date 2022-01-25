@@ -2,32 +2,15 @@ import 'package:flutter/material.dart';
 import 'chat/ChatList.dart';
 import 'icons/my_flutter_app_icons.dart';
 
-void main() => runApp(const MyApp());
-
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  static const String _title = 'StudWay';
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: _title,
-      home: MyStatefulWidget(),
-    );
-  }
-}
-
-class MyStatefulWidget extends StatefulWidget {
-  const MyStatefulWidget({Key? key}) : super(key: key);
-
-  @override
-  State<MyStatefulWidget> createState() => _MyStatefulWidgetState();
+  State<HomePage> createState() => _HomePageState();
 }
 
 
-class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   static const TextStyle _optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
