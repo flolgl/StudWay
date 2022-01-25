@@ -10,15 +10,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomeState extends State<HomePage> {
-  String useruid = '';
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-          title: Container(
-        color: Colors.white,
-      )),
-    );
+    return Container(
+        color: Colors.red,
+        child: Center(
+          child: Text(
+            'Hello World',
+            textDirection: TextDirection.ltr,
+          ),
+        ));
   }
 }
