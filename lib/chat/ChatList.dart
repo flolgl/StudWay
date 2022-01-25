@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:studway_project/chat/components/Body.dart';
+
 
 class ChatList extends StatelessWidget{
 
@@ -9,6 +11,7 @@ class ChatList extends StatelessWidget{
 
     return Scaffold(
       appBar: buildAppBar(),
+      body: Body(),
     );
 
 

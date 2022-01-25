@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'ChatList.dart';
+import 'chat/ChatList.dart';
 import 'icons/my_flutter_app_icons.dart';
 
 void main() => runApp(const MyApp());
