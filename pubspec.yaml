@@ -64,7 +64,8 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - assets/images/logo_white.png
-
+    - assets/images/studway_blanc.png
+    - assets/images/studway_blanc_rebords.png
 
   fonts:
      - family: MyFlutterApp
