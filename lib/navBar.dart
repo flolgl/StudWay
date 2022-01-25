@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'ChatList.dart';
 import 'icons/my_flutter_app_icons.dart';
 
 void main() => runApp(const MyApp());
@@ -53,48 +54,66 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Padding(
-          padding: EdgeInsets.only(top: 20.0),
-
-          child:Icon(
-            MyFlutterApp.StudWay_logo_white,
-            size: 100.0,
-          ),
-        ),
-
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.message_outlined),
-            tooltip: "",
-            onPressed: () {
-            },
-          ),
-        ],
-      ),
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.business),
-            label: 'Business',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle_outlined),
-            label: 'School',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
-        onTap: _onItemTapped,
-      ),
+      appBar: buildAppBar(),
+      body: buildCenter(),
+      bottomNavigationBar: buildBottomNavigationBar(),
     );
+  }
+
+  Center buildCenter() {
+    return Center(
+      child: _widgetOptions.elementAt(_selectedIndex),
+    );
+  }
+
+  BottomNavigationBar buildBottomNavigationBar() {
+    return BottomNavigationBar(
+      items: const <BottomNavigationBarItem>[
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          label: 'Home',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.business),
+          label: 'Business',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.account_circle_outlined),
+          label: 'School',
+        ),
+      ],
+      currentIndex: _selectedIndex,
+      selectedItemColor: Colors.blue,
+      onTap: _onItemTapped,
+    );
+  }
+
+  AppBar buildAppBar() {
+    return AppBar(
+      centerTitle: true,
+      title: const Padding(
+        padding: EdgeInsets.only(top: 20.0),
+
+        child:Icon(
+          MyFlutterApp.StudWay_logo_white,
+          size: 100.0,
+        ),
+      ),
+
+      actions: <Widget>[
+        IconButton(
+          icon: const Icon(Icons.message_outlined),
+          tooltip: "",
+          onPressed: () {
+            _navigateToChatsListScreen(context);
+
+          },
+        ),
+      ],
+    );
+  }
+
+  void _navigateToChatsListScreen(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ChatList()));
   }
 }
