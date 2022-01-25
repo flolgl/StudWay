@@ -64,6 +64,12 @@ flutter:
   assets:
     - assets/images/logo_white.png
 
+
+  fonts:
+     - family: MyFlutterApp
+       fonts:
+         - asset: fonts/MyFlutterApp.ttf
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'icons/my_flutter_app_icons.dart';
 
 void main() => runApp(const MyApp());
 
@@ -6,7 +7,7 @@ void main() => runApp(const MyApp());
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  static const String _title = 'Flutter Code Sample';
+  static const String _title = 'StudWay';
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +54,16 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('StudWay'),
+        centerTitle: true,
+        title: const Padding(
+          padding: EdgeInsets.only(top: 20.0),
+
+          child:Icon(
+            MyFlutterApp.StudWay_logo_white,
+            size: 100.0,
+          ),
+        ),
+
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.message_outlined),
