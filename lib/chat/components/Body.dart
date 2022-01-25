@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Classe permettant d'afficher les conversations d'un user
 class Body extends StatelessWidget{
   static const int _messageMax = 5;
   static const String _messageAuteur = "Jean Bernard";
@@ -13,46 +14,63 @@ class Body extends StatelessWidget{
         Expanded(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: ListView.builder(
-                itemCount: _messageMax,
-                itemBuilder: (context, text) =>
-                Row(
-                  children: [
-                    const CircleAvatar(
-                      backgroundColor: Colors.amber,
-                      radius: 24.0,
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text(_messageAuteur),
-                            Padding(padding: EdgeInsets.only(top: 8.0)),
-                            Opacity(
-                              opacity: 0.65,
-                              child: Text(
-                                _messageDebut,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-
-                          ],
-                        ),
-                      ),
-                    ),
-                    const Opacity(
-                      opacity: 0.65,
-                      child: Text(_messageTime),
-                    ),
-                  ],
-                )
-            ),
+            child: _buildListView(),
           ),
         ),
       ],
+    );
+  }
+
+
+  /// Retourne une [ListView] correspond toutes les conversations d'une personne avec les détails tels que
+  /// l'avatar du correspond, un début du texte ou depuis quand le message a été écrit
+  ListView _buildListView() {
+    return ListView.builder(
+      itemCount: _messageMax,
+      itemBuilder: (context, text) =>
+      Row(
+        children: [
+          _buildCircleAvatar(),
+          _buildMsgBody(),
+          const Opacity(
+            opacity: 0.65,
+            child: Text(_messageTime),
+          ),
+        ],
+      )
+    );
+  }
+
+  /// Retourne un widget [Expanded] correspondant au nom du correspond et un début du dernier message de la conversation
+  Expanded _buildMsgBody() {
+    return Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                Text(_messageAuteur),
+                Padding(padding: EdgeInsets.only(top: 8.0)),
+                Opacity(
+                  opacity: 0.65,
+                  child: Text(
+                    _messageDebut,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+
+              ],
+            ),
+          ),
+        );
+  }
+
+  /// Retournant un [CircleAvatar] du correspondant
+  CircleAvatar _buildCircleAvatar() {
+    return const CircleAvatar(
+      backgroundColor: Colors.amber,
+      radius: 24.0,
     );
   }
 
