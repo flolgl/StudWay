@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:studway_project/login/Login.dart';
 
 class LoginSignUpPage extends StatelessWidget{
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,24 +14,28 @@ class LoginSignUpPage extends StatelessWidget{
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: _buildElevatedButton("Connexion", Colors.blueAccent),
+              child: _buildElevatedButton("Connexion", const Color(0xff4f6d9c), 1, context),
             ),
             const Padding(padding: EdgeInsets.symmetric(vertical: 15)),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: _buildElevatedButton("Inscription", Colors.lightBlue),
+              child: _buildElevatedButton("Inscription", const Color(0xff161d2b), 0, context),
             ),
           ],
         ),
       ),
-      backgroundColor: Colors.blue,
+      backgroundColor: const Color(0xff1d2b43),
 
     );
   }
 
-  ElevatedButton _buildElevatedButton(String text, Color color) {
+  ElevatedButton _buildElevatedButton(String text, Color color, int screen, BuildContext context){
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: (){
+
+          _navigateToScreen(context, screen);
+
+        },
       child: Text(
         text,
         style: const TextStyle(fontSize: 20),
@@ -39,6 +45,17 @@ class LoginSignUpPage extends StatelessWidget{
         fixedSize: const Size(700, 50),
       ),
     );
+  }
+
+  void _navigateToScreen(BuildContext context, int screen) {
+    switch (screen){
+      case 1:
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const Login()));
+        break;
+      default:
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const Login()));
+
+    }
   }
 
 
