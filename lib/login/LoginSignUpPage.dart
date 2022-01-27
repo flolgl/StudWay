@@ -3,6 +3,8 @@ import 'package:studway_project/AppTheme.dart';
 import 'package:studway_project/login/Login.dart';
 
 class LoginSignUpPage extends StatelessWidget{
+  const LoginSignUpPage({Key? key}) : super(key: key);
+
 
   @override
   Widget build(BuildContext context) {
@@ -15,17 +17,17 @@ class LoginSignUpPage extends StatelessWidget{
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: _buildElevatedButton("Connexion", const Color(0xff4f6d9c), 1, context),
+              child: _buildElevatedButton("Connexion", AppTheme.lightBlue, 1, context),
             ),
             const Padding(padding: EdgeInsets.symmetric(vertical: 15)),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: _buildElevatedButton("Inscription", const Color(0xff161d2b), 0, context),
+              child: _buildElevatedButton("Inscription", AppTheme.darkerBlue, 0, context),
             ),
           ],
         ),
       ),
-      backgroundColor: const Color(0xff1d2b43),
+      backgroundColor: AppTheme.normalBlue,
 
     );
   }
@@ -74,6 +76,6 @@ class App extends StatelessWidget {
     return MaterialApp(
         title: 'Studway App',
         theme: AppTheme.lightTheme,
-        home: LoginSignUpPage());
+        home: const LoginSignUpPage());
   }
 }
