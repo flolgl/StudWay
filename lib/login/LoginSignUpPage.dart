@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:studway_project/AppTheme.dart';
 import 'package:studway_project/login/Login.dart';
+import 'package:studway_project/login/Register.dart';
 
 class LoginSignUpPage extends StatelessWidget{
   const LoginSignUpPage({Key? key}) : super(key: key);
@@ -56,7 +57,7 @@ class LoginSignUpPage extends StatelessWidget{
         Navigator.of(context).push(MaterialPageRoute(builder: (context) => const Login()));
         break;
       default:
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const Login()));
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const Register()));
 
     }
   }
