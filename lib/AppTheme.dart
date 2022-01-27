@@ -9,6 +9,7 @@ class AppTheme{
 
     return base.copyWith(
       primaryColor: const Color(0xff1d2b43),
+      backgroundColor: Colors.white,
 
       buttonTheme: const ButtonThemeData(
         buttonColor: Color(0xff1d2b43),
