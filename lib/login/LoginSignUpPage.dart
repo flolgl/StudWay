@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:studway_project/AppTheme.dart';
 import 'package:studway_project/login/Login.dart';
 
 class LoginSignUpPage extends StatelessWidget{
@@ -72,7 +73,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         title: 'Studway App',
-        theme: ThemeData(primarySwatch: Colors.blue),
+        theme: AppTheme.lightTheme,
         home: LoginSignUpPage());
   }
 }
