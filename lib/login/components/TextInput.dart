@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
 class TextInput extends StatelessWidget {
@@ -8,7 +9,7 @@ class TextInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO : Utiliser le thème pour les couleurs
-    return TextField(
+    return TextFormField(
       decoration: InputDecoration(
         border: const OutlineInputBorder(),
         hintText: text,
@@ -24,9 +25,16 @@ class TextInput extends StatelessWidget {
 
 
       ),
+      validator : (input){
+        if (input == null || input.isEmpty || !EmailValidator.validate(input))
+          return "Merci de rentrer une email valide";
+        return null;
+
+      },
       cursorColor: const Color(0xff4f6d9c),
 
 
     );
   }
+
 }

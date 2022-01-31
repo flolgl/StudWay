@@ -9,7 +9,7 @@ class PasswordInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO : Utiliser le thème pour les couleurs
-    return TextField(
+    return TextFormField(
       decoration: InputDecoration(
         border: const OutlineInputBorder(),
         hintText: text,
@@ -27,6 +27,12 @@ class PasswordInput extends StatelessWidget {
       obscureText: true,
       enableSuggestions: false,
       autocorrect: false,
+      validator:(input){
+        if(input == null || input.isEmpty || input.length < 10)
+          return "Merci de choisir un mot de passe plus difficile";
+        return null;
+
+      },
       cursorColor: const Color(0xff4f6d9c),
 
 

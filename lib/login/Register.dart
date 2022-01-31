@@ -8,8 +8,8 @@ class Register extends StatelessWidget{
   Widget build(BuildContext context) {
 
     return Scaffold(
-    appBar: buildAppBar(context),
-    body: const RegisterBody(),
+      appBar: buildAppBar(context),
+      body: const RegisterForm(),
 
     );
 
