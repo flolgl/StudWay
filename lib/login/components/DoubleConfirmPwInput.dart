@@ -40,6 +40,8 @@ class DoubleConfirmPwInput extends StatelessWidget {
             validator:(input){
               if(input == null || input.isEmpty || input.length < 10)
                 return "Merci de choisir un mot de passe plus difficile";
+              if (!validatePw(input))
+                return "Le mot de passe doit comporter des caractères spéciaux, être de longueur 12 minimum et avoir au moins 1 majuscule";
               input1 = input;
               return null;
 
@@ -57,8 +59,10 @@ class DoubleConfirmPwInput extends StatelessWidget {
             enableSuggestions: false,
             autocorrect: false,
             validator:(input){
-              if(input == null || input.isEmpty || input.length < 10)
-                return "Merci de choisir un mot de passe plus difficile";
+              if(input == null || input.isEmpty)
+                return "Merci de choisir un mot de passe";
+              if (!validatePw(input))
+                return "Le mot de passe doit comporter des caractères spéciaux, être de longueur 12 minimum et avoir au moins 1 majuscule";
               if(input1 == null || input1.isEmpty || input1 != input)
                 return "Les deux mots de passe doivent correspondre";
               return null;
@@ -71,5 +75,11 @@ class DoubleConfirmPwInput extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  bool validatePw(String value){
+    String  pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{12,}$';
+    RegExp regExp = RegExp(pattern);
+    return regExp.hasMatch(value);
   }
 }
