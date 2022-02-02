@@ -5,8 +5,16 @@ import 'package:studway_project/icons/social_sign_in_icons_icons.dart';
 import 'package:studway_project/login/components/PasswordInput.dart';
 import 'package:studway_project/login/components/TextInput.dart';
 
-class LoginBody extends StatelessWidget{
-  const LoginBody({Key? key}) : super(key: key);
+class LoginForm extends StatefulWidget {
+  const LoginForm({Key? key}) : super(key: key);
+
+  @override
+  LoginBody createState() => LoginBody();
+
+}
+
+class LoginBody extends State<LoginForm>{
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -64,69 +72,73 @@ class LoginBody extends StatelessWidget{
   }
 
   Widget _buildColumnForm(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        const SizedBox(height: 60,),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: const [
-              BoxShadow(
-                color: Color.fromRGBO(39, 58, 105, 3),
-                blurRadius: 20,
-                offset: Offset(0,10),
 
-              )
-            ],
-          ),
-          child: Column(
-            children:<Widget>[
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  border: Border(
-                      bottom: BorderSide(color: Colors.grey[200]!)
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: <Widget>[
+          const SizedBox(height: 60,),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color.fromRGBO(39, 58, 105, 3),
+                  blurRadius: 20,
+                  offset: Offset(0,10),
+
+                )
+              ],
+            ),
+            child: Column(
+              children:<Widget>[
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border(
+                        bottom: BorderSide(color: Colors.grey[200]!)
+                    ),
                   ),
+                  child: const TextInput(text: "Adresse mail"),
                 ),
-                child: const TextInput(text: "Adresse mail"),
-              ),
-              Container(
-                padding: const EdgeInsets.all(10),
-                child: const PasswordInput(text: "Mot de passe"),
-              ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  child: const PasswordInput(text: "Mot de passe"),
+                ),
+
+              ],
+            ),
+          ),
+          const SizedBox(height: 40),
+          Center(
+              child: _hyperLinkBuild(context, "Mot de passe oublié ?")
+          ),
+
+          const SizedBox(height: 40),
+          Center(
+              child: _buildElevatedButton("Se connecter", AppTheme.normalBlue, context)
+
+          ),
+          const SizedBox(height: 40),
+          Center(
+              child: _hyperLinkBuild(context, "Pas de compte ? S'enregistrer")
+          ),
+          const SizedBox(height: 40),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+
+              createSocialButton(SocialSignInIcons.github),
+              createSocialButton(SocialSignInIcons.linkedin_in),
+              createSocialButton(SocialSignInIcons.apple),
+
+
 
             ],
           ),
-        ),
-        const SizedBox(height: 40),
-        Center(
-            child: _hyperLinkBuild(context, "Mot de passe oublié ?")
-        ),
-
-        const SizedBox(height: 40),
-        Center(
-            child: _buildElevatedButton("Se connecter", AppTheme.normalBlue, context)
-
-        ),
-        const SizedBox(height: 40),
-        Center(
-            child: _hyperLinkBuild(context, "Pas de compte ? S'enregistrer")
-        ),
-        const SizedBox(height: 40),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-
-            createSocialButton(SocialSignInIcons.github),
-            createSocialButton(SocialSignInIcons.linkedin_in),
-            createSocialButton(SocialSignInIcons.apple),
-
-
-
-          ],
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -147,10 +159,10 @@ class LoginBody extends StatelessWidget{
     Size size = MediaQuery.of(context).size;
 
     return ElevatedButton(
-      onPressed: (){
+      onPressed: () {
 
-        _verifyConnexion(context);
-
+        if (_formKey.currentState!.validate())
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Processing Data')));
       },
       child: Text(
         text,
@@ -164,10 +176,6 @@ class LoginBody extends StatelessWidget{
         ),
       ),
     );
-  }
-
-  void _verifyConnexion(BuildContext context) {
-
   }
 
   Widget _hyperLinkBuild(BuildContext context, String text) {
