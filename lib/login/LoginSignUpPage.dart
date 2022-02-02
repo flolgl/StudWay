@@ -18,22 +18,22 @@ class LoginSignUpPage extends StatelessWidget{
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: _buildElevatedButton("Connexion", AppTheme.lightBlue, 1, context),
+              child: _buildElevatedButton("Connexion", AppTheme.lightBlue, AppTheme.darkerBlue, 1, context),
             ),
             const Padding(padding: EdgeInsets.symmetric(vertical: 15)),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: _buildElevatedButton("Inscription", AppTheme.darkerBlue, 0, context),
+              child: _buildElevatedButton("Inscription", AppTheme.darkerBlue, AppTheme.lightBlue, 0, context),
             ),
           ],
         ),
       ),
-      backgroundColor: AppTheme.normalBlue,
+      backgroundColor: const Color(0xfff2f5f7),
 
     );
   }
 
-  ElevatedButton _buildElevatedButton(String text, Color color, int screen, BuildContext context){
+  ElevatedButton _buildElevatedButton(String text, Color color, Color textColor, int screen, BuildContext context){
     return ElevatedButton(
       onPressed: (){
 
@@ -42,7 +42,7 @@ class LoginSignUpPage extends StatelessWidget{
         },
       child: Text(
         text,
-        style: const TextStyle(fontSize: 20),
+        style: TextStyle(fontSize: 20, color:textColor),
       ),
       style: ElevatedButton.styleFrom(
         primary: color,

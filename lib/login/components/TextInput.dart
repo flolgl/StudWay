@@ -11,19 +11,10 @@ class TextInput extends StatelessWidget {
     // TODO : Utiliser le thème pour les couleurs
     return TextFormField(
       decoration: InputDecoration(
-        border: const OutlineInputBorder(),
+        border: InputBorder.none,
         hintText: text,
         hintStyle: const TextStyle(color: Colors.grey),
-        filled: true,
-        fillColor: Colors.grey.shade200,
-        focusedBorder:const OutlineInputBorder(
-          borderSide: BorderSide(color: Color(0xff4f6d9c), width: 2.0),
-        ),
-        enabledBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey, width: 0.0),
-        ),
-
-
+        prefixIcon: const Icon(Icons.person_outlined),
       ),
       validator : (input){
         if (input == null || input.isEmpty || !EmailValidator.validate(input))

@@ -67,12 +67,16 @@ flutter:
     - assets/images/logo_white.png
     - assets/images/studway_blanc.png
     - assets/images/studway_blanc_rebords.png
+    - assets/images/studway_violet.png
 
   fonts:
      - family: MyFlutterApp
        fonts:
-         - asset: fonts/MyFlutterApp.ttf
+          - asset: fonts/MyFlutterApp.ttf
 
+     - family: SocialSignInIcons
+       fonts:
+          - asset: fonts/SocialSignInIcons.ttf
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
