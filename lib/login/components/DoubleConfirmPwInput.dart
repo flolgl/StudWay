@@ -13,16 +13,10 @@ class DoubleConfirmPwInput extends StatelessWidget {
 
 
     InputDecoration decoration = InputDecoration(
-      border: const OutlineInputBorder(),
+      border: InputBorder.none,
+      hintText: text,
       hintStyle: const TextStyle(color: Colors.grey),
-      filled: true,
-      fillColor: Colors.grey.shade200,
-      focusedBorder:const OutlineInputBorder(
-      borderSide: BorderSide(color: Color(0xff4f6d9c), width: 2.0),
-      ),
-      enabledBorder: const OutlineInputBorder(
-      borderSide: BorderSide(color: Colors.grey, width: 0.0),
-      ),
+      prefixIcon: const Icon(Icons.lock_outlined),
 
     );
 
@@ -30,8 +24,13 @@ class DoubleConfirmPwInput extends StatelessWidget {
     // TODO : Utiliser le thème pour les couleurs
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16),
+        Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            border: Border(
+                bottom: BorderSide(color: Colors.grey[200]!)
+            ),
+          ),
           child: TextFormField(
             decoration: decoration.copyWith(hintText: "Mot de passe"),
             obscureText: true,
@@ -51,8 +50,9 @@ class DoubleConfirmPwInput extends StatelessWidget {
 
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16),
+        Container(
+          padding: const EdgeInsets.all(10),
+
           child: TextFormField(
             decoration: decoration.copyWith(hintText: "Confirmer mot de passe"),
             obscureText: true,

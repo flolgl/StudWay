@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../AppTheme.dart';
 import 'components/RegisterBody.dart';
 
 class Register extends StatelessWidget{
@@ -7,9 +8,8 @@ class Register extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
-      appBar: buildAppBar(context),
-      body: const RegisterForm(),
+    return const Scaffold(
+      body: RegisterForm(),
 
     );
 
@@ -37,4 +37,20 @@ class Register extends StatelessWidget{
     );
   }
 
+}
+
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(App());
+}
+
+class App extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+        title: 'Studway App',
+        theme: AppTheme.lightTheme,
+        debugShowCheckedModeBanner: false,
+        home: const Register());
+  }
 }

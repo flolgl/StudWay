@@ -1,80 +1,151 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:studway_project/AppTheme.dart';
-import 'package:studway_project/login/components/DoubleConfirmPwInput.dart';
-import 'package:studway_project/login/components/PasswordInput.dart';
+import 'package:studway_project/icons/social_sign_in_icons_icons.dart';
 import 'package:studway_project/login/components/TextInput.dart';
+
+import 'DoubleConfirmPwInput.dart';
 
 class RegisterForm extends StatefulWidget {
   const RegisterForm({Key? key}) : super(key: key);
 
   @override
-  RegisterBody createState() {
-    return RegisterBody();
-  }
+  RegisterBody createState() => RegisterBody();
+
 }
 
 class RegisterBody extends State<RegisterForm>{
-
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
+    // TODO : Connect avec réseaux sociaux
+    var gradientDecoration = BoxDecoration(
+        gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            colors: [
+              AppTheme.darkerBlue,
+              AppTheme.normalBlue,
+            ]
+        ),
+    );
+    return Container(
+      width: double.infinity,
+      decoration: gradientDecoration,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
 
-    // TODO : Peut-être rendre le bouton plus rond + mettre le choix entreprise ou non ET la suite appropriée
+        children: <Widget>[
+          const SizedBox(height: 80,),
+          _buildConnexionText(),
+          const SizedBox(height: 20),
+          Expanded(
+            child: Container(
+              decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(60), topRight: Radius.circular(60))
+              ),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(30),
+                  child: _buildColumnForm(context),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildConnexionText() {
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: const <Widget>[
+          Text("S'enregistrer", style: TextStyle(color: Colors.white, fontSize: 40),),
+          SizedBox(height: 10,),
+          Text("Bienvenue", style: TextStyle(color: Colors.white, fontSize: 18),),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildColumnForm(BuildContext context) {
+
     return Form(
       key: _formKey,
-      child: Row(
-        children: [
-          Expanded(
-            flex: 2, // 20%
-            child: Container(color: Colors.transparent),
-          ),
+      child: Column(
+        children: <Widget>[
+          const SizedBox(height: 60,),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color.fromRGBO(39, 58, 105, 3),
+                  blurRadius: 20,
+                  offset: Offset(0,10),
 
-          Expanded(
-            flex: 6,
+                )
+              ],
+            ),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 16),
-                  child: TextInput(text: "Adresse mail")
+              children:<Widget>[
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border(
+                        bottom: BorderSide(color: Colors.grey[200]!)
+                    ),
+                  ),
+                  child: const TextInput(text: "Adresse mail"),
                 ),
                 const DoubleConfirmPwInput(text: "Mot de passe"),
-                /*
-                const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                    child: PasswordInput(text: "Mot de passe")
-                ),
-                const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                    child: PasswordInput(text: "Confirmer mot de passe")
-                ),
-                 */
-                const SizedBox(height: 14),
-                Align(
-                    alignment: Alignment.topRight,
-                    child: _hyperLinkBuild(context, "Mot de passe oublié ?")
-                ),
-
-                const SizedBox(height: 30),
-                Align(
-                    alignment: Alignment.topRight,
-                    child: _buildElevatedButton(AppTheme.lightBlue, context)
-
-                ),
-
-
 
               ],
             ),
           ),
-          Expanded(
-            flex: 2, // 20%
-            child: Container(color: Colors.transparent),
-          ),
+          const SizedBox(height: 40),
+          Align(
+              alignment: Alignment.topRight,
+              child: _buildElevatedButton(AppTheme.normalBlue, context)
 
+          ),
+          const SizedBox(height: 20),
+
+          Center(
+              child: _hyperLinkBuild(context, "Already have an account ? Se connecter")
+          ),
+          const SizedBox(height: 30),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+
+              createSocialButton(SocialSignInIcons.github),
+              createSocialButton(SocialSignInIcons.linkedin_in),
+              createSocialButton(SocialSignInIcons.apple),
+
+
+
+            ],
+          ),
         ],
+      ),
+    );
+  }
+
+  ElevatedButton createSocialButton(IconData icon) {
+    return ElevatedButton(
+      onPressed: () {},
+      child: Icon(icon, color: AppTheme.normalBlue,),
+      style: ElevatedButton.styleFrom(
+        primary: Colors.white,
+        shape: const CircleBorder(),
+        padding: const EdgeInsets.all(24),
+
       ),
     );
   }
@@ -82,10 +153,7 @@ class RegisterBody extends State<RegisterForm>{
   ElevatedButton _buildElevatedButton(Color color, BuildContext context){
     return ElevatedButton(
       onPressed: () {
-        // Validate returns true if the form is valid, or false otherwise.
         if (_formKey.currentState!.validate()) {
-          // If the form is valid, display a snackbar. In the real world,
-          // you'd often call a server or save the information in a database.
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Processing Data')),
           );
@@ -103,14 +171,10 @@ class RegisterBody extends State<RegisterForm>{
     );
   }
 
-  void _verifyConnexion(BuildContext context) {
-
-  }
-
   Widget _hyperLinkBuild(BuildContext context, String text) {
     // TODO : Hover color + diriger vers mot de passe oublié
-    TextStyle linkStyle = const TextStyle(color: Color(0xff4f6d9c));
-    TextStyle hoverStyle = const TextStyle(color: Color(0xff1d2b43));
+    TextStyle linkStyle = TextStyle(color: AppTheme.normalBlue);
+    //TextStyle hoverStyle = const TextStyle(color: Color(0xff1d2b43));
     return RichText(
       text: TextSpan(
         style: linkStyle,
