@@ -9,7 +9,7 @@ class Login extends StatelessWidget{
   Widget build(BuildContext context) {
 
     return const Scaffold(
-      body: LoginBody(),
+      body: LoginForm(),
 
     );
 
