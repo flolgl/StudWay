@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:studway_project/user/User.dart';
 import 'chat/ChatList.dart';
 import 'icons/my_flutter_app_icons.dart';
+import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -11,6 +15,33 @@ class HomePage extends StatefulWidget {
 
 
 class _HomePageState extends State<HomePage> {
+
+  late Future<User> futureUser;
+
+  @override
+  void initState() {
+    super.initState();
+    futureUser = fetchUserInfo();
+  }
+
+
+
+  Future<User> fetchUserInfo() async {
+    final response = await http
+        .get(Uri.parse('http://localhost:3000/users/1'));
+
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      return User.fromJson(jsonDecode(response.body));
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load album');
+    }
+  }
+
+
   int _selectedIndex = 0;
   static const TextStyle _optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
@@ -38,14 +69,26 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(),
-      body: buildCenter(),
+      body: _buildCenter(),
       bottomNavigationBar: buildBottomNavigationBar(),
     );
   }
 
-  Center buildCenter() {
+  Center _buildCenter() {
     return Center(
-      child: _widgetOptions.elementAt(_selectedIndex),
+      child: FutureBuilder<User>(
+        future: futureUser,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Text(snapshot.data!.prenom);
+          } else if (snapshot.hasError) {
+            return Text('${snapshot.error}');
+          }
+
+          // By default, show a loading spinner.
+          return const CircularProgressIndicator();
+        },
+      ),
     );
   }
 
@@ -66,7 +109,6 @@ class _HomePageState extends State<HomePage> {
         ),
       ],
       currentIndex: _selectedIndex,
-      selectedItemColor: Colors.blue,
       onTap: _onItemTapped,
     );
   }
