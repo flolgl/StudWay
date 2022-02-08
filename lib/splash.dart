@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'main.dart';
+import 'package:studway_project/AppTheme.dart';
 import 'Home.dart';
 
 class Splash extends StatefulWidget {
@@ -17,15 +17,16 @@ class _SplashState extends State<Splash> {
   }
 
   _navigatetohome() async {
-    await Future.delayed(Duration(milliseconds: 10000), () {});
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => HomePage()));
+    await Future.delayed(
+        const Duration(milliseconds: 1000),
+        () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomePage()))
+    );
   }
 
   @override
   Widget build(BuildContext buildContext) {
     return Scaffold(
-      backgroundColor: Colors.blue,
+      backgroundColor: AppTheme.normalBlue,
       body: Center(
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -33,19 +34,19 @@ class _SplashState extends State<Splash> {
           Container(
             height: 100,
             width: 100,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               image: DecorationImage(
                 image: AssetImage('../assets/images/logo_white.png'),
                 fit: BoxFit.fill,
               ),
             ),
           ),
-          Container(
-              child: Text('StudWay Inc.',
-                  style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white))),
+          const Text('StudWay Inc.',
+              style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white)
+          ),
         ],
       )),
     );
