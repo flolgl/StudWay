@@ -29,26 +29,28 @@ class _SplashState extends State<Splash> {
       backgroundColor: AppTheme.normalBlue,
       body: Center(
           child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            height: 100,
-            width: 100,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('../assets/images/logo_white.png'),
-                fit: BoxFit.fill,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                height: 100,
+                width: 100,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('../assets/images/logo_white.png'),
+                    fit: BoxFit.fill,
+                  ),
+                ),
               ),
-            ),
-          ),
-          const Text('StudWay Inc.',
-              style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white)
-          ),
-        ],
-      )),
+              const Text('StudWay Inc.',
+                style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white
+                )
+              ),
+            ],
+          )
+      ),
     );
   }
 }
