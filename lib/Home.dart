@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
-      throw Exception('Failed to load album');
+      throw Exception('Impossible de récupérer les données');
     }
   }
 
@@ -82,7 +82,7 @@ class _HomePageState extends State<HomePage> {
           if (snapshot.hasData) {
             return Text(snapshot.data!.prenom);
           } else if (snapshot.hasError) {
-            return Text('${snapshot.error}');
+            return const Text('Impossible de récupérer vos données. Veuillez réessayer plus tard.');
           }
 
           // By default, show a loading spinner.
