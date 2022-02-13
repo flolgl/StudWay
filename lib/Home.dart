@@ -1,10 +1,12 @@
 import 'dart:convert';
 
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
-import 'package:studway_project/user/User.dart';
 import 'chat/ChatList.dart';
 import 'icons/my_flutter_app_icons.dart';
 import 'package:http/http.dart' as http;
+import 'package:studway_project/user/User.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -126,13 +128,20 @@ class _HomePageState extends State<HomePage> {
       ),
 
       actions: <Widget>[
-        IconButton(
-          icon: const Icon(Icons.message_outlined),
-          tooltip: "",
-          onPressed: () {
-            _navigateToChatsListScreen(context);
+        Padding(
+          padding: const EdgeInsets.only(right: 15.0),
+          child: IconButton(
+            //icon: const Icon(Icons.message_outlined),
+            icon: FutureBuilder<User>(
+              future: futureUser,
+              builder: (context, snapshot) => snapshot.hasData ? Badge(badgeContent: Text(snapshot.data!.nbMsg.toString()), child: const Icon(Icons.message_outlined)) : const Text(""),
+            ),
+            tooltip: "",
+            onPressed: () {
+              _navigateToChatsListScreen(context);
 
-          },
+            },
+          ),
         ),
       ],
     );
