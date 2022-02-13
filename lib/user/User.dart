@@ -1,16 +1,20 @@
 class User {
-  final int id;
-  final String prenom;
+  final int _id;
+  final int _nbMsg;
+  final String _prenom;
 
-  const User({
-    required this.id,
-    required this.prenom,
-  });
+  User(this._id, this._nbMsg, this._prenom);
+
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      id: json['id'],
-      prenom: json['prenom'],
+      json['id'],
+      json['nbMsg'],
+      json['prenom'],
     );
   }
+
+  int get id => _id;
+  int get nbMsg => _nbMsg;
+  String get prenom => _prenom;
 }
