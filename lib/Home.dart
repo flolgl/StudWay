@@ -134,7 +134,7 @@ class _HomePageState extends State<HomePage> {
             //icon: const Icon(Icons.message_outlined),
             icon: FutureBuilder<User>(
               future: futureUser,
-              builder: (context, snapshot) => snapshot.hasData ? Badge(badgeContent: Text(snapshot.data!.nbMsg.toString()), child: const Icon(Icons.message_outlined)) : const Text(""),
+              builder: (context, snapshot) => snapshot.hasData ? Badge(badgeContent: Text(snapshot.data!.nbMsg.toString()), child: const Icon(Icons.message_outlined)) : const Icon(Icons.message_outlined),
             ),
             tooltip: "",
             onPressed: () {
