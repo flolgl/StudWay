@@ -1,49 +1,52 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:studway_project/AppTheme.dart';
+import 'package:studway_project/Home.dart';
 import 'package:studway_project/icons/social_sign_in_icons_icons.dart';
 import 'package:studway_project/login/components/PasswordInput.dart';
 import 'package:studway_project/login/components/TextInput.dart';
+
+import 'LoginAuth.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({Key? key}) : super(key: key);
 
   @override
   LoginBody createState() => LoginBody();
-
 }
 
-class LoginBody extends State<LoginForm>{
+class LoginBody extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
+  final TextInput emailInput = TextInput(text: "Adresse mail");
+  final PasswordInput passwordInput = PasswordInput(text: "Mot de passe");
 
   @override
   Widget build(BuildContext context) {
     // TODO : Connect avec réseaux sociaux
     var gradientDecoration = BoxDecoration(
-        gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            colors: [
-              AppTheme.darkerBlue,
-              AppTheme.normalBlue,
-            ]
-        ),
+      gradient: LinearGradient(begin: Alignment.topCenter, colors: [
+        AppTheme.darkerBlue,
+        AppTheme.normalBlue,
+      ]),
     );
     return Container(
       width: double.infinity,
       decoration: gradientDecoration,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-
         children: <Widget>[
-          const SizedBox(height: 80,),
+          const SizedBox(
+            height: 80,
+          ),
           _buildConnexionText(),
           const SizedBox(height: 20),
           Expanded(
             child: Container(
               decoration: const BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.only(topLeft: Radius.circular(60), topRight: Radius.circular(60))
-              ),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(60),
+                      topRight: Radius.circular(60))),
               child: SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.all(30),
@@ -63,21 +66,30 @@ class LoginBody extends State<LoginForm>{
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: const <Widget>[
-          Text("Connexion", style: TextStyle(color: Colors.white, fontSize: 40),),
-          SizedBox(height: 10,),
-          Text("Bienvenue", style: TextStyle(color: Colors.white, fontSize: 18),),
+          Text(
+            "Connexion",
+            style: TextStyle(color: Colors.white, fontSize: 40),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Text(
+            "Bienvenue",
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
         ],
       ),
     );
   }
 
   Widget _buildColumnForm(BuildContext context) {
-
     return Form(
       key: _formKey,
       child: Column(
         children: <Widget>[
-          const SizedBox(height: 60,),
+          const SizedBox(
+            height: 60,
+          ),
           Container(
             decoration: BoxDecoration(
               color: Colors.white,
@@ -86,55 +98,43 @@ class LoginBody extends State<LoginForm>{
                 BoxShadow(
                   color: Color.fromRGBO(39, 58, 105, 3),
                   blurRadius: 20,
-                  offset: Offset(0,10),
-
+                  offset: Offset(0, 10),
                 )
               ],
             ),
             child: Column(
-              children:<Widget>[
+              children: <Widget>[
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    border: Border(
-                        bottom: BorderSide(color: Colors.grey[200]!)
-                    ),
+                    border:
+                        Border(bottom: BorderSide(color: Colors.grey[200]!)),
                   ),
-                  child: const TextInput(text: "Adresse mail"),
+                  child: emailInput,
                 ),
                 Container(
                   padding: const EdgeInsets.all(10),
-                  child: const PasswordInput(text: "Mot de passe"),
+                  child: passwordInput,
                 ),
-
               ],
             ),
           ),
           const SizedBox(height: 40),
-          Center(
-              child: _hyperLinkBuild(context, "Mot de passe oublié ?")
-          ),
-
+          Center(child: _hyperLinkBuild(context, "Mot de passe oublié ?")),
           const SizedBox(height: 40),
           Center(
-              child: _buildElevatedButton("Se connecter", AppTheme.normalBlue, context)
-
-          ),
+              child: _buildElevatedButton(
+                  "Se connecter", AppTheme.normalBlue, context)),
           const SizedBox(height: 40),
           Center(
-              child: _hyperLinkBuild(context, "Pas de compte ? S'enregistrer")
-          ),
+              child: _hyperLinkBuild(context, "Pas de compte ? S'enregistrer")),
           const SizedBox(height: 40),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-
               createSocialButton(SocialSignInIcons.github),
               createSocialButton(SocialSignInIcons.linkedin_in),
               createSocialButton(SocialSignInIcons.apple),
-
-
-
             ],
           ),
         ],
@@ -145,24 +145,31 @@ class LoginBody extends State<LoginForm>{
   ElevatedButton createSocialButton(IconData icon) {
     return ElevatedButton(
       onPressed: () {},
-      child: Icon(icon, color: AppTheme.normalBlue,),
+      child: Icon(
+        icon,
+        color: AppTheme.normalBlue,
+      ),
       style: ElevatedButton.styleFrom(
         primary: Colors.white,
         shape: const CircleBorder(),
         padding: const EdgeInsets.all(24),
-
       ),
     );
   }
 
-  ElevatedButton _buildElevatedButton(String text, Color color, BuildContext context){
+  ElevatedButton _buildElevatedButton(
+      String text, Color color, BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
     return ElevatedButton(
-      onPressed: () {
-
-        if (_formKey.currentState!.validate())
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Processing Data')));
+      onPressed: () async {
+        if (_formKey.currentState!.validate()) {
+          if (await LoginAuth.connect(
+              emailInput.getInputText(), passwordInput.getInputText())) {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const HomePage()));
+          }
+        }
       },
       child: Text(
         text,
@@ -186,7 +193,6 @@ class LoginBody extends State<LoginForm>{
       text: TextSpan(
         style: linkStyle,
         text: text,
-
         recognizer: TapGestureRecognizer()
           ..onTap = () {
             print(text);
@@ -194,5 +200,4 @@ class LoginBody extends State<LoginForm>{
       ),
     );
   }
-
 }

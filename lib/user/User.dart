@@ -5,7 +5,6 @@ class User {
 
   User(this._id, this._nbMsg, this._prenom);
 
-
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       json['id'],
