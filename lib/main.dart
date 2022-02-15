@@ -16,6 +16,7 @@ class App extends StatelessWidget {
     return MaterialApp(
         title: 'Studway App',
         theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
         debugShowCheckedModeBanner: false,
         home: const Splash());
   }
