@@ -164,10 +164,8 @@ class LoginBody extends State<LoginForm> {
     return ElevatedButton(
       onPressed: () async {
         if (_formKey.currentState!.validate()) {
-          if (await LoginAuth.connect(
-              emailInput.getInputText(), passwordInput.getInputText())) {
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const HomePage()));
+          if (await LoginAuth.connect(emailInput.getInputText(), passwordInput.getInputText())) {
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomePage()));
           }
         }
       },
