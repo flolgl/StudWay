@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 class DoubleConfirmPwInput extends StatelessWidget {
   final String text;
+  String _password = "";
 
-  const DoubleConfirmPwInput({Key? key, required this.text}) : super(key: key);
+  DoubleConfirmPwInput({Key? key, required this.text}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +60,7 @@ class DoubleConfirmPwInput extends StatelessWidget {
               if (input1.isEmpty || input1 != input) {
                 return "Les deux mots de passe doivent correspondre";
               }
+              _password = input;
               return null;
             },
             cursorColor: const Color(0xff4f6d9c),
@@ -66,6 +68,10 @@ class DoubleConfirmPwInput extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  String getPassword() {
+    return _password;
   }
 
   bool validatePw(String value) {

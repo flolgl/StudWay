@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:studway_project/AppTheme.dart';
-import 'Home.dart';
+import 'package:studway_project/view/AppTheme.dart';
+import './Home.dart';
 
 class Splash extends StatefulWidget {
   const Splash({Key? key}) : super(key: key);

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:studway_project/splash.dart';
+import 'package:studway_project/view/splash.dart';
 
 import 'AppTheme.dart';
 

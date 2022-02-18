@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../AppTheme.dart';
-import 'components/LoginAuth.dart';
 import 'components/LoginBody.dart';
 
 class Login extends StatelessWidget {
@@ -38,7 +37,7 @@ class Login extends StatelessWidget {
 }
 
 void main() {
-  LoginAuth.register("aaaa", "bbbb");
+  //LoginAuth.register("aaaa", "bbbb");
   WidgetsFlutterBinding.ensureInitialized();
   runApp(App());
 }

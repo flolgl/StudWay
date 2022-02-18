@@ -4,8 +4,8 @@ import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'chat/ChatList.dart';
 import 'icons/my_flutter_app_icons.dart';
-import 'package:http/http.dart' as http;
-import 'package:studway_project/user/User.dart';
+import '../controller/user/User.dart';
+
 
 
 class HomePage extends StatefulWidget {
@@ -23,25 +23,11 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    futureUser = fetchUserInfo();
+    futureUser = User.fetchUserInfo();
   }
 
 
 
-  Future<User> fetchUserInfo() async {
-    final response = await http
-        .get(Uri.parse('http://localhost:3000/users/1'));
-
-    if (response.statusCode == 200) {
-      // If the server did return a 200 OK response,
-      // then parse the JSON.
-      return User.fromJson(jsonDecode(response.body));
-    } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      throw Exception('Impossible de récupérer les données');
-    }
-  }
 
 
   int _selectedIndex = 0;

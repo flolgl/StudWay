@@ -1,24 +1,24 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:studway_project/AppTheme.dart';
-import 'package:studway_project/Home.dart';
-import 'package:studway_project/icons/social_sign_in_icons_icons.dart';
-import 'package:studway_project/login/components/PasswordInput.dart';
-import 'package:studway_project/login/components/TextInput.dart';
+import '../../../controller/login/LoginAuth.dart';
+import '../../AppTheme.dart';
+import '../../icons/social_sign_in_icons_icons.dart';
+import '../Login.dart';
+import './TextInput.dart';
 
-import 'LoginAuth.dart';
+import 'DoubleConfirmPwInput.dart';
 
-class LoginForm extends StatefulWidget {
-  const LoginForm({Key? key}) : super(key: key);
+class RegisterForm extends StatefulWidget {
+  const RegisterForm({Key? key}) : super(key: key);
 
   @override
-  LoginBody createState() => LoginBody();
+  RegisterBody createState() => RegisterBody();
 }
 
-class LoginBody extends State<LoginForm> {
+class RegisterBody extends State<RegisterForm> {
   final _formKey = GlobalKey<FormState>();
-  final TextInput emailInput = TextInput(text: "Adresse mail");
-  final PasswordInput passwordInput = PasswordInput(text: "Mot de passe");
+  final emailInput = TextInput(text: "Adresse mail");
+  final pwInput = DoubleConfirmPwInput(text: "Mot de passe");
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +67,7 @@ class LoginBody extends State<LoginForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: const <Widget>[
           Text(
-            "Connexion",
+            "S'enregistrer",
             style: TextStyle(color: Colors.white, fontSize: 40),
           ),
           SizedBox(
@@ -112,23 +112,19 @@ class LoginBody extends State<LoginForm> {
                   ),
                   child: emailInput,
                 ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  child: passwordInput,
-                ),
+                pwInput,
               ],
             ),
           ),
           const SizedBox(height: 40),
-          Center(child: _hyperLinkBuild(context, "Mot de passe oublié ?")),
-          const SizedBox(height: 40),
+          Align(
+              alignment: Alignment.topRight,
+              child: _buildElevatedButton(AppTheme.normalBlue, context)),
+          const SizedBox(height: 20),
           Center(
-              child: _buildElevatedButton(
-                  "Se connecter", AppTheme.normalBlue, context)),
-          const SizedBox(height: 40),
-          Center(
-              child: _hyperLinkBuild(context, "Pas de compte ? S'enregistrer")),
-          const SizedBox(height: 40),
+              child: _hyperLinkBuild(
+                  context, "Already have an account ? Se connecter")),
+          const SizedBox(height: 30),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -157,27 +153,19 @@ class LoginBody extends State<LoginForm> {
     );
   }
 
-  ElevatedButton _buildElevatedButton(
-      String text, Color color, BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-
+  ElevatedButton _buildElevatedButton(Color color, BuildContext context) {
     return ElevatedButton(
       onPressed: () async {
-        if (_formKey.currentState!.validate()) {
-          if (await LoginAuth.connect(emailInput.getInputText(), passwordInput.getInputText())) {
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomePage()));
-          }
+        if (_formKey.currentState!.validate() && await LoginAuth.register(emailInput.getInputText(), pwInput.getPassword())) {
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Login()));
         }
       },
-      child: Text(
-        text,
-        style: const TextStyle(fontSize: 20),
-      ),
+      child: const Icon(Icons.arrow_forward),
       style: ElevatedButton.styleFrom(
         primary: color,
-        fixedSize: Size(size.width, 50),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.0),
+          borderRadius: BorderRadius.circular(90.0),
         ),
       ),
     );

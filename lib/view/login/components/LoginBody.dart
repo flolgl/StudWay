@@ -1,20 +1,24 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:studway_project/AppTheme.dart';
-import 'package:studway_project/icons/social_sign_in_icons_icons.dart';
-import 'package:studway_project/login/components/TextInput.dart';
+import 'package:studway_project/view/AppTheme.dart';
+import '../../Home.dart';
+import '../../icons/social_sign_in_icons_icons.dart';
+import '../components/PasswordInput.dart';
+import '../components/TextInput.dart';
 
-import 'DoubleConfirmPwInput.dart';
+import '../../../controller/login/LoginAuth.dart';
 
-class RegisterForm extends StatefulWidget {
-  const RegisterForm({Key? key}) : super(key: key);
+class LoginForm extends StatefulWidget {
+  const LoginForm({Key? key}) : super(key: key);
 
   @override
-  RegisterBody createState() => RegisterBody();
+  LoginBody createState() => LoginBody();
 }
 
-class RegisterBody extends State<RegisterForm> {
+class LoginBody extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
+  final TextInput emailInput = TextInput(text: "Adresse mail");
+  final PasswordInput passwordInput = PasswordInput(text: "Mot de passe");
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +67,7 @@ class RegisterBody extends State<RegisterForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: const <Widget>[
           Text(
-            "S'enregistrer",
+            "Connexion",
             style: TextStyle(color: Colors.white, fontSize: 40),
           ),
           SizedBox(
@@ -103,24 +107,27 @@ class RegisterBody extends State<RegisterForm> {
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    border:
-                        Border(bottom: BorderSide(color: Colors.grey[200]!)),
+                    border: Border(bottom: BorderSide(color: Colors.grey[200]!)),
                   ),
-                  child: TextInput(text: "Adresse mail"),
+                  child: emailInput,
                 ),
-                const DoubleConfirmPwInput(text: "Mot de passe"),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  child: passwordInput,
+                ),
               ],
             ),
           ),
           const SizedBox(height: 40),
-          Align(
-              alignment: Alignment.topRight,
-              child: _buildElevatedButton(AppTheme.normalBlue, context)),
-          const SizedBox(height: 20),
+          Center(child: _hyperLinkBuild(context, "Mot de passe oublié ?")),
+          const SizedBox(height: 40),
           Center(
-              child: _hyperLinkBuild(
-                  context, "Already have an account ? Se connecter")),
-          const SizedBox(height: 30),
+              child: _buildElevatedButton(
+                  "Se connecter", AppTheme.normalBlue, context)),
+          const SizedBox(height: 40),
+          Center(
+              child: _hyperLinkBuild(context, "Pas de compte ? S'enregistrer")),
+          const SizedBox(height: 40),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -149,21 +156,27 @@ class RegisterBody extends State<RegisterForm> {
     );
   }
 
-  ElevatedButton _buildElevatedButton(Color color, BuildContext context) {
+  ElevatedButton _buildElevatedButton(
+      String text, Color color, BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     return ElevatedButton(
-      onPressed: () {
+      onPressed: () async {
         if (_formKey.currentState!.validate()) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Processing Data')),
-          );
+          if (await LoginAuth.connect(emailInput.getInputText(), passwordInput.getInputText())) {
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomePage()));
+          }
         }
       },
-      child: const Icon(Icons.arrow_forward),
+      child: Text(
+        text,
+        style: const TextStyle(fontSize: 20),
+      ),
       style: ElevatedButton.styleFrom(
         primary: color,
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        fixedSize: Size(size.width, 50),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(90.0),
+          borderRadius: BorderRadius.circular(12.0),
         ),
       ),
     );

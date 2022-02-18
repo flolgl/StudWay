@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:studway_project/chat/components/Body.dart';
+import './components/Body.dart';
 
 /// Classe permettant d'afficher la page Messages d'un user
 class ChatList extends StatelessWidget{
