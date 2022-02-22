@@ -17,21 +17,18 @@ class LoginAuth {
         }),
       );
       return response.statusCode == 201;
-    }
-    catch(e){
+    } catch (e) {
       return false;
     }
-
   }
 
   static Future<bool> connect(String email, String password) async {
     try {
-
       var response = await http.post(
         Uri.parse('http://localhost:3000/login'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
-          "Access-Control-Allow-Origin" : "*",
+          "Access-Control-Allow-Origin": "*",
         },
         body: jsonEncode(<String, String>{
           'email': email,
@@ -40,26 +37,21 @@ class LoginAuth {
       );
       var okToConnect = _isResponseOkForConnecting(response.body);
 
-      if (okToConnect == null)
-        return false;
+      if (okToConnect == null) return false;
 
       await FlutterSession().set("token", okToConnect);
       return true;
-    }
-    catch(e){
+    } catch (e) {
       return false;
     }
     //print(response.body);
-
   }
 
-  static String? _isResponseOkForConnecting(String body){
-    if (body.isEmpty)
-      return null;
+  static String? _isResponseOkForConnecting(String body) {
+    if (body.isEmpty) return null;
 
     final parsed = jsonDecode(body) as Map<String, dynamic>;
-    if (parsed.containsKey("auth"))
-      return parsed["auth"];
+    if (parsed.containsKey("auth")) return parsed["auth"];
     return null;
   }
 }

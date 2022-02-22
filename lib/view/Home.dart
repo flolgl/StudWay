@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'chat/ChatList.dart';
 import 'icons/my_flutter_app_icons.dart';
 import '../controller/user/User.dart';
+import 'offers/components/DataSearch.dart';
 
 
 
@@ -17,7 +18,6 @@ class HomePage extends StatefulWidget {
 
 
 class _HomePageState extends State<HomePage> {
-
   late Future<User> futureUser;
 
   @override
@@ -25,8 +25,6 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     futureUser = User.fetchUserInfo();
   }
-
-
 
 
 
@@ -114,20 +112,34 @@ class _HomePageState extends State<HomePage> {
       ),
 
       actions: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(right: 15.0),
-          child: IconButton(
-            //icon: const Icon(Icons.message_outlined),
-            icon: FutureBuilder<User>(
-              future: futureUser,
-              builder: (context, snapshot) => snapshot.hasData ? Badge(badgeContent: Text(snapshot.data!.nbMsg.toString()), child: const Icon(Icons.message_outlined)) : const Icon(Icons.message_outlined),
-            ),
-            tooltip: "",
-            onPressed: () {
-              _navigateToChatsListScreen(context);
+        Row(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(right: 15.0),
+              child: IconButton(
+                //icon: const Icon(Icons.message_outlined),
+                icon: FutureBuilder<User>(
+                  future: futureUser,
+                  builder: (context, snapshot) => snapshot.hasData ? Badge(badgeContent: Text(snapshot.data!.nbMsg.toString()), child: const Icon(Icons.message_outlined)) : const Icon(Icons.message_outlined),
+                ),
+                tooltip: "",
+                onPressed: () {
+                  _navigateToChatsListScreen(context);
 
-            },
-          ),
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 30.0),
+              child: IconButton(
+                //icon: const Icon(Icons.message_outlined),
+                icon: Icon(Icons.search),
+                onPressed: () {
+                  showSearch(context: context, delegate: DataSearch());
+                },
+              ),
+            ),
+          ]
         ),
       ],
     );
