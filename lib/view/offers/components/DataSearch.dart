@@ -41,14 +41,22 @@ class DataSearch extends SearchDelegate<String>{
   //TODO : FETCH DANS LA BD DES OFFRES CORRESPONDANT A LA RECHERCHE
   @override
   Widget buildResults(BuildContext context) {
+    /*  ####### Quand il y aura le backend #######
+        List<Widget> offerList = new List<Widget>();
+        for(var i = 0; i < fetchedOffers.length; i++){
+          list.add(new OfferContainer(fetchedData...));
+        }
+        return new ListView(children: list);
+      */
+    List<Widget> offerList = [
+      OfferContainer(),
+      OfferContainer(),
+      OfferContainer(),
+      OfferContainer(),
+      OfferContainer(),
+    ];
     return ListView(
-        children: [
-          OfferContainer(),
-          OfferContainer(),
-          OfferContainer(),
-          OfferContainer(),
-          OfferContainer(),
-        ],
+        children: offerList,
     );
   }
 
