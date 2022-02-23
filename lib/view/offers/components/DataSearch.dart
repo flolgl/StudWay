@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:studway_project/view/offers/components/OfferContainer.dart';
 
 class DataSearch extends SearchDelegate<String>{
   final suggestions = [
@@ -40,13 +41,14 @@ class DataSearch extends SearchDelegate<String>{
   //TODO : FETCH DANS LA BD DES OFFRES CORRESPONDANT A LA RECHERCHE
   @override
   Widget buildResults(BuildContext context) {
-    return Container(
-      height: 100.0,
-      width: 100.0,
-      color: Colors.red,
-      child: Center(
-        child: Text(query),
-      ),
+    return ListView(
+        children: [
+          OfferContainer(),
+          OfferContainer(),
+          OfferContainer(),
+          OfferContainer(),
+          OfferContainer(),
+        ],
     );
   }
 
