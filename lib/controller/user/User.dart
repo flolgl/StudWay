@@ -18,6 +18,7 @@ class User {
       this._description, this._profilePic, this._cvFile, this._type);
 
   factory User.fromJson(Map<String, dynamic> json) {
+    //print(json);
     return User(
       json['id'],
       json['nbMsg'],

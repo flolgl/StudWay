@@ -11,12 +11,13 @@ void main() {
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
 
+  // TODO : fix le darkTheme
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
         title: 'Studway App',
         theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
+        //darkTheme: AppTheme.darkTheme,
         debugShowCheckedModeBanner: false,
         home: const Splash());
   }

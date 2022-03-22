@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:studway_project/controller/login/LoginAuth.dart';
 import 'package:studway_project/view/AppTheme.dart';
+import 'package:studway_project/view/login/Login.dart';
 import './Home.dart';
 
 class Splash extends StatefulWidget {
@@ -17,14 +19,17 @@ class _SplashState extends State<Splash> {
   }
 
   _navigatetohome() async {
-    await Future.delayed(
-        const Duration(milliseconds: 1000),
-        () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomePage()))
-    );
+
+    await LoginAuth.isUserLoggedIn() ?
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomePage()))
+    :
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Login()))
+    ;
+
   }
 
-  @override
-  Widget build(BuildContext buildContext) {
+
+  Widget buildSplashScreen(BuildContext buildContext){
     return Scaffold(
       backgroundColor: AppTheme.normalBlue,
       body: Center(
@@ -42,15 +47,20 @@ class _SplashState extends State<Splash> {
                 ),
               ),
               const Text('StudWay Inc.',
-                style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white
-                )
+                  style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white
+                  )
               ),
             ],
           )
       ),
     );
+  }
+
+  @override
+  Widget build(BuildContext buildContext) {
+    return buildSplashScreen(buildContext);
   }
 }
