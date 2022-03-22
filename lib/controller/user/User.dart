@@ -9,10 +9,11 @@ class User {
   User(this._id, this._nbMsg, this._prenom);
 
   factory User.fromJson(Map<String, dynamic> json) {
+    //print(json);
     return User(
       json['id'],
       json['nbMsg'],
-      json['prenom'],
+      json['Prenom'],
     );
   }
 
