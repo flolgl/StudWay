@@ -20,6 +20,7 @@ class LoginBody extends State<LoginForm> {
   final TextInput emailInput = TextInput(text: "Adresse mail");
   final PasswordInput passwordInput = PasswordInput(text: "Mot de passe");
 
+  /// Méthode permettant la construction du form Login
   @override
   Widget build(BuildContext context) {
     // TODO : Connect avec réseaux sociaux
@@ -50,7 +51,7 @@ class LoginBody extends State<LoginForm> {
               child: SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.all(30),
-                  child: _buildColumnForm(context),
+                  child: _buildConnexionForm(context),
                 ),
               ),
             ),
@@ -60,6 +61,7 @@ class LoginBody extends State<LoginForm> {
     );
   }
 
+  /// Méthode retournant les textes de connexion
   Widget _buildConnexionText() {
     return Padding(
       padding: const EdgeInsets.all(20),
@@ -82,7 +84,8 @@ class LoginBody extends State<LoginForm> {
     );
   }
 
-  Widget _buildColumnForm(BuildContext context) {
+  /// Méthode retournant le form de connexion
+  Widget _buildConnexionForm(BuildContext context) {
     return Form(
       key: _formKey,
       child: Column(
@@ -119,14 +122,14 @@ class LoginBody extends State<LoginForm> {
             ),
           ),
           const SizedBox(height: 40),
-          Center(child: _hyperLinkBuild(context, "Mot de passe oublié ?")),
+          Center(child: _buildHrefText(context, "Mot de passe oublié ?")),
           const SizedBox(height: 40),
           Center(
-              child: _buildElevatedButton(
+              child: _buildSubmitButton(
                   "Se connecter", AppTheme.normalBlue, context)),
           const SizedBox(height: 40),
           Center(
-              child: _hyperLinkBuild(context, "Pas de compte ? S'enregistrer")),
+              child: _buildHrefText(context, "Pas de compte ? S'enregistrer")),
           const SizedBox(height: 40),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -141,6 +144,7 @@ class LoginBody extends State<LoginForm> {
     );
   }
 
+  /// Méthode retournant un button de connexion avec Réseaux Sociaux
   ElevatedButton createSocialButton(IconData icon) {
     return ElevatedButton(
       onPressed: () {},
@@ -156,8 +160,8 @@ class LoginBody extends State<LoginForm> {
     );
   }
 
-  ElevatedButton _buildElevatedButton(
-      String text, Color color, BuildContext context) {
+  /// Méthode retournant le bouton de submit
+  ElevatedButton _buildSubmitButton(String text, Color color, BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
     return ElevatedButton(
@@ -182,7 +186,8 @@ class LoginBody extends State<LoginForm> {
     );
   }
 
-  Widget _hyperLinkBuild(BuildContext context, String text) {
+  /// Méthode retournant un text comme un href en html
+  Widget _buildHrefText(BuildContext context, String text) {
     // TODO : Hover color + diriger vers mot de passe oublié
     TextStyle linkStyle = TextStyle(color: AppTheme.normalBlue);
     //TextStyle hoverStyle = const TextStyle(color: Color(0xff1d2b43));
