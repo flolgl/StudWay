@@ -6,6 +6,15 @@
       "author": "typicode"
     }
   ],
+  "offers": [
+    {
+      "id": 1,
+      "companyName": "AXA",
+      "location": "Paris(75)",
+      "description": "Stage développeur web Flutter 6 mois",
+      "uploadDate" : "2022-03-22T17:59:00.511Z"
+    }
+  ],
   "comments": [
     {
       "id": 1,
