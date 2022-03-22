@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'package:flutter_session/flutter_session.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginAuth {
   static Future<bool> register(String email, String password) async {
@@ -23,8 +23,9 @@ class LoginAuth {
   }
 
   static Future<bool> connect(String email, String password) async {
+    final http.Response response;
     try {
-      var response = await http.post(
+      response = await http.post(
         Uri.parse('http://localhost:3000/login'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -35,23 +36,34 @@ class LoginAuth {
           'password': password,
         }),
       );
-      var okToConnect = _isResponseOkForConnecting(response.body);
-
-      if (okToConnect == null) return false;
-
-      await FlutterSession().set("token", okToConnect);
-      return true;
     } catch (e) {
       return false;
     }
-    //print(response.body);
+
+    final String? token = getToken(response.body);
+
+    if (response.statusCode!=200 || token == null)
+      return false;
+
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString("token", token);
+    return true;
+
   }
 
-  static String? _isResponseOkForConnecting(String body) {
-    if (body.isEmpty) return null;
-
+  static String? getToken(String body) {
     final parsed = jsonDecode(body) as Map<String, dynamic>;
-    if (parsed.containsKey("auth")) return parsed["auth"];
-    return null;
+    return parsed["accessToken"];
+  }
+
+
+  static Future<bool> isUserLoggedIn() async {
+    final prefs = await SharedPreferences.getInstance();
+    try{
+      return prefs.getString("token") != null;
+    }catch(e) {
+      return false;
+    }
+
   }
 }
