@@ -47,7 +47,9 @@ class LoginBody extends State<LoginForm> {
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(60),
-                      topRight: Radius.circular(60))),
+                      topRight: Radius.circular(60),
+                  ),
+              ),
               child: SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.all(30),
