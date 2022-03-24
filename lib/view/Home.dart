@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
+import 'Home/Profile/Profile.dart';
 import 'chat/ChatList.dart';
 import 'icons/my_flutter_app_icons.dart';
 import '../controller/user/User.dart';
@@ -18,32 +19,33 @@ class HomePage extends StatefulWidget {
 
 
 class _HomePageState extends State<HomePage> {
-  late Future<User> futureUser;
+  late User _user;
+  bool _errorWhileFetching = false;
+  bool _fetching = true;
+  int _selectedIndex = 0;
+  Profile? _profileScreen = null;
 
   @override
   void initState() {
     super.initState();
-    futureUser = User.fetchUserInfo();
+    _getUserData();
   }
 
+  void _getUserData() async {
+    try{
+      var person = await User.fetchUserInfo();
 
-
-  int _selectedIndex = 0;
-  static const TextStyle _optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: Home',
-      style: _optionStyle,
-    ),
-    Text(
-      'Index 1: Business',
-      style: _optionStyle,
-    ),
-    Text(
-      'Index 2: School',
-      style: _optionStyle,
-    ),
-  ];
+      setState((){
+        _user = person;
+        _fetching = false;
+      });
+    }
+    catch(e){
+      setState(() {
+        _errorWhileFetching = true;
+      });
+    }
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -55,28 +57,38 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(),
-      body: _buildCenter(),
+      body: _buildAppBody(),
       bottomNavigationBar: buildBottomNavigationBar(),
     );
   }
 
-  Center _buildCenter() {
-    return Center(
-      child: FutureBuilder<User>(
-        future: futureUser,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Text(snapshot.data!.prenom);
-          } else if (snapshot.hasError) {
-            return const Text('Impossible de récupérer vos données. Veuillez réessayer plus tard.');
-          }
+  Widget _buildAppBody(){
+    if (_fetching) {
+      return const Center(child: CircularProgressIndicator(),);
+    }
 
-          // By default, show a loading spinner.
-          return const CircularProgressIndicator();
-        },
-      ),
+    switch(_selectedIndex){
+      case 0: return Text("Page 1");
+      case 1: return Text("page 2");
+      default: return _buildProfileScreen();
+    }
+  }
+
+  Profile _getProfileScreen(){
+    return _profileScreen ?? Profile(_user);
+  }
+
+  Center _buildProfileScreen() {
+    print("ran");
+    return Center(
+      child: _errorWhileFetching
+          ? const Text(
+          'Impossible de récupérer vos données. Veuillez réessayer plus tard.')
+          :
+          _getProfileScreen(),
     );
   }
+
 
   BottomNavigationBar buildBottomNavigationBar() {
     return BottomNavigationBar(
@@ -118,10 +130,7 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.only(right: 15.0),
               child: IconButton(
                 //icon: const Icon(Icons.message_outlined),
-                icon: FutureBuilder<User>(
-                  future: futureUser,
-                  builder: (context, snapshot) => snapshot.hasData && snapshot.data?.nbMsg != null ? Badge(badgeContent: Text(snapshot.data!.nbMsg.toString()), child: const Icon(Icons.message_outlined)) : const Icon(Icons.message_outlined),
-                ),
+                icon: _fetching || _errorWhileFetching ? const Icon(Icons.message_outlined) : Badge(badgeContent: Text(_user.nbMsg.toString()), child: const Icon(Icons.message_outlined)),
                 tooltip: "",
                 onPressed: () {
                   _navigateToChatsListScreen(context);
@@ -148,4 +157,5 @@ class _HomePageState extends State<HomePage> {
   void _navigateToChatsListScreen(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => ChatList()));
   }
+
 }
