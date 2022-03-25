@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:studway_project/controller/user/User.dart';
 import 'package:studway_project/view/Home/Profile/pages/ExperienceForm.dart';
@@ -6,8 +7,6 @@ import 'package:studway_project/view/Home/Profile/pages/FormationForm.dart';
 
 import '../../AppTheme.dart';
 import 'pages/CompetenceForm.dart';
-
-import 'package:flutter/foundation.dart' show kIsWeb;
 
 class Profile extends StatelessWidget {
   final User _user;
@@ -28,11 +27,15 @@ class Profile extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          const SizedBox(height: 30,),
+          const SizedBox(
+            height: 30,
+          ),
           Center(
             child: _buildCircleAvatar(),
           ),
-          const SizedBox(height: 30,),
+          const SizedBox(
+            height: 30,
+          ),
 
           // Le container de la partie Options (container avec bg white)
           Expanded(
@@ -40,7 +43,6 @@ class Profile extends StatelessWidget {
               width: double.infinity,
               decoration: const BoxDecoration(
                 color: Colors.white,
-
               ),
               child: SingleChildScrollView(
                 child: Column(
@@ -64,7 +66,6 @@ class Profile extends StatelessWidget {
     // );
   }
 
-
   /// Méthode retournant le form de connexion
   Widget _buildOptionsBody(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -76,7 +77,7 @@ class Profile extends StatelessWidget {
             MouseRegion(
               cursor: SystemMouseCursors.click,
               child: GestureDetector(
-                onTap: (){
+                onTap: () {
                   if (kIsWeb) {
                     _buildErrorPopUp(context);
                   } else {
@@ -84,7 +85,7 @@ class Profile extends StatelessWidget {
                   }
                 },
                 child: Container(
-                  width: width/2-30,
+                  width: width / 2 - 30,
                   height: 170,
                   padding: const EdgeInsets.all(15),
                   child: Column(
@@ -103,19 +104,20 @@ class Profile extends StatelessWidget {
                       ),
                       const Text(
                         "Curriculum Vitae",
-                        style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black45),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.black45),
                       ),
                       SizedBox(
                         width: double.infinity,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children:<Widget>[
+                          children: <Widget>[
                             RichText(
                               text: const TextSpan(
-                                  text:"Ajouter\n",
-                                  children: [
-                                    TextSpan(text:"un CV"),
-                                  ],
+                                text: "Ajouter\n",
+                                children: [
+                                  TextSpan(text: "un CV"),
+                                ],
                               ),
                             ),
                             const Icon(Icons.arrow_forward),
@@ -131,13 +133,18 @@ class Profile extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 15,),
+            const SizedBox(
+              height: 15,
+            ),
             MouseRegion(
               cursor: SystemMouseCursors.click,
               child: GestureDetector(
-                onTap: (){Navigator.of(context).push(MaterialPageRoute(builder: (context) => ExperienceForm(_user)));},
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => ExperienceForm(_user)));
+                },
                 child: Container(
-                  width: width/2-30,
+                  width: width / 2 - 30,
                   height: 170,
                   padding: const EdgeInsets.all(15),
                   child: Column(
@@ -156,18 +163,19 @@ class Profile extends StatelessWidget {
                       ),
                       const Text(
                         "Expérience(s) professionnelle(s)",
-                        style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black45),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.black45),
                       ),
                       SizedBox(
                         width: double.infinity,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children:<Widget>[
+                          children: <Widget>[
                             RichText(
                               text: const TextSpan(
-                                text:"Ajouter\n",
+                                text: "Ajouter\n",
                                 children: [
-                                  TextSpan(text:"une expérience"),
+                                  TextSpan(text: "une expérience"),
                                 ],
                               ),
                             ),
@@ -184,10 +192,9 @@ class Profile extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 15,),
-
-
-
+            const SizedBox(
+              height: 15,
+            ),
           ],
         ),
         Column(
@@ -195,9 +202,12 @@ class Profile extends StatelessWidget {
             MouseRegion(
               cursor: SystemMouseCursors.click,
               child: GestureDetector(
-                onTap: (){Navigator.of(context).push(MaterialPageRoute(builder: (context) => FormationForm(_user)));},
-                child : Container(
-                  width: width/2-30,
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => FormationForm(_user)));
+                },
+                child: Container(
+                  width: width / 2 - 30,
                   height: 170,
                   padding: const EdgeInsets.all(15),
                   child: Column(
@@ -216,18 +226,19 @@ class Profile extends StatelessWidget {
                       ),
                       const Text(
                         "Formation(s)",
-                        style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black45),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.black45),
                       ),
                       SizedBox(
                         width: double.infinity,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children:<Widget>[
+                          children: <Widget>[
                             RichText(
                               text: const TextSpan(
-                                text:"Ajouter\n",
+                                text: "Ajouter\n",
                                 children: [
-                                  TextSpan(text:"une formation"),
+                                  TextSpan(text: "une formation"),
                                 ],
                               ),
                             ),
@@ -244,13 +255,18 @@ class Profile extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 15,),
+            const SizedBox(
+              height: 15,
+            ),
             MouseRegion(
               cursor: SystemMouseCursors.click,
               child: GestureDetector(
-                onTap: (){Navigator.of(context).push(MaterialPageRoute(builder: (context) => CompetenceForm(_user)));},
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => CompetenceForm(_user)));
+                },
                 child: Container(
-                  width: width/2-30,
+                  width: width / 2 - 30,
                   height: 170,
                   padding: const EdgeInsets.all(15),
                   child: Column(
@@ -269,18 +285,19 @@ class Profile extends StatelessWidget {
                       ),
                       const Text(
                         "Compétences",
-                        style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black45),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.black45),
                       ),
                       SizedBox(
                         width: double.infinity,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children:<Widget>[
+                          children: <Widget>[
                             RichText(
                               text: const TextSpan(
-                                text:"Ajouter\n",
+                                text: "Ajouter\n",
                                 children: [
-                                  TextSpan(text:"une compétence"),
+                                  TextSpan(text: "une compétence"),
                                 ],
                               ),
                             ),
@@ -297,8 +314,9 @@ class Profile extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 15,),
-
+            const SizedBox(
+              height: 15,
+            ),
           ],
         ),
       ],
@@ -325,14 +343,9 @@ class Profile extends StatelessWidget {
   // TODO : vraiment mettre la photo de profile
   /// Retournant un [CircleAvatar] du user
   Widget _buildCircleAvatar() {
-    return Container(
-
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(30),
-      ),
-      width: 150,
-      height: 150,
+    return CircleAvatar(
+      minRadius: 55,
+      backgroundImage: NetworkImage(_user.profilpic),
     );
   }
 
@@ -342,53 +355,88 @@ class Profile extends StatelessWidget {
         Expanded(
           child: Container(
             decoration: const BoxDecoration(
-                border: Border(
-                  right: BorderSide(color:Colors.black45),
-                ),
+              border: Border(
+                right: BorderSide(color: Colors.black45),
+              ),
             ),
             child: Column(
-                children: const [
-                  SizedBox(height: 10,),
-                  Text("Applied", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black45, fontSize: 14),),
-                  SizedBox(height: 10,),
-                  Text("23", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),),
-                ],
+              children: const [
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "Applied",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black45,
+                      fontSize: 14),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "23",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                ),
+              ],
             ),
           ),
-
         ),
         Expanded(
           child: Container(
             decoration: const BoxDecoration(
-                border: Border(
-                  right: BorderSide(color:Colors.black45),
-                ),
+              border: Border(
+                right: BorderSide(color: Colors.black45),
+              ),
             ),
             child: Column(
-                children: const [
-                  SizedBox(height: 10,),
-                  Text("Applied", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black45, fontSize: 14),),
-                  SizedBox(height: 10,),
-                  Text("23", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),),
-                ],
+              children: const [
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "Applied",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black45,
+                      fontSize: 14),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "23",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                ),
+              ],
             ),
           ),
-
         ),
         Expanded(
           child: Container(
             child: Column(
-                children: const [
-                  SizedBox(height: 10,),
-                  Text("Applied", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black45, fontSize: 14),),
-                  SizedBox(height: 10,),
-                  Text("23", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),),
-                ],
+              children: const [
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "Applied",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black45,
+                      fontSize: 14),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "23",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                ),
+              ],
             ),
           ),
-
         ),
-
       ],
     );
   }
@@ -396,7 +444,6 @@ class Profile extends StatelessWidget {
   void _navigateToProfileForm(BuildContext context) {
     ;
   }
-
 }
 
 //

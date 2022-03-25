@@ -49,11 +49,11 @@ class DataSearch extends SearchDelegate<String>{
         return new ListView(children: list);
       */
     List<Widget> offerList = [
-      OfferContainer(),
-      OfferContainer(),
-      OfferContainer(),
-      OfferContainer(),
-      OfferContainer(),
+      OfferContainer(0),
+      OfferContainer(1),
+      OfferContainer(2),
+      OfferContainer(3),
+      OfferContainer(4),
     ];
     return ListView(
         children: offerList,

@@ -3,26 +3,27 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class Offer {
-  final int _id;
+  final int _idAnnonce;
   final String _companyName;
   final String _location;
   final String _description;
   final DateTime _uploadDate;
 
-  Offer(this._id, this._companyName, this._location, this._description,
+  Offer(this._idAnnonce, this._companyName, this._location, this._description,
       this._uploadDate);
 
   factory Offer.fromJson(Map<String, dynamic> json) {
+    print("debug");
     return Offer(
-      json['id'],
-      json['companyName'],
-      json['location'],
-      json['description'],
-      json['uploadDate'],
+      json['idAnnonce'],
+      json['titre'],
+      json['localisation'],
+      json['Description'],
+      DateTime.parse(json['datePublication']),
     );
   }
 
-  int get id => _id;
+  int get id => _idAnnonce;
 
   String get companyName => _companyName;
 
@@ -32,11 +33,11 @@ class Offer {
 
   DateTime get uploadDate => _uploadDate;
 
-  static Future<Offer> fetchOfferInfo() async {
+  static Future<Offer> fetchOfferInfoByID(int id) async {
     try {
-      final response =
-          await http.get(Uri.parse('http://localhost:3000/offers/1'));
-
+      final response = await http
+          .get(Uri.parse("http://localhost:3000/annonce/" + id.toString()));
+      var a = id.toString();
       if (response.statusCode == 200) {
         // If the server did return a 200 OK response,
         // then parse the JSON.
@@ -44,32 +45,17 @@ class Offer {
       } else {
         // If the server did not return a 200 OK response,
         // then throw an exception.
-        throw Exception('Impossible de récupérer les données');
+        throw Exception('Status code != 200');
       }
     } catch (e) {
-      throw Exception('Impossible de récupérer les données');
+      throw Exception('caught http error');
     }
   }
 
-  /*static Future<int> amountOfTimeSinceUpload() async {
-    try {
-      final response =
-          await http.get(Uri.parse('http://localhost:3000/offers/1'));
 
-      if (response.statusCode == 200) {
-        // If the server did return a 200 OK response,
-        // then parse the JSON.
-        var uploadDateToString = json.decode(response.body)['uploadDate'];
-        DateTime uploadDate = DateTime.parse(uploadDateToString);
-        return DateTime.now().difference(uploadDate).inDays;
-      } else {
-        // If the server did not return a 200 OK response,
-        // then throw an exception.
-        throw Exception('Impossible de récupérer les données');
-      }
-    } catch (e) {
-      throw Exception('Impossible de récupérer les données');
-    }
+
+  int timeSinceUploadInDays() {
+    var timeSinceUploadInDays = DateTime.now().difference(uploadDate).inDays;
+    return timeSinceUploadInDays;
   }
-  */
 }
