@@ -40,20 +40,21 @@ class LoginAuth {
       return false;
     }
 
-    final String? token = getToken(response.body);
+    final List<dynamic>? token = getToken(response.body);
 
     if (response.statusCode!=200 || token == null)
       return false;
 
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString("token", token);
+    prefs.setString("token", token.elementAt(0));
+    prefs.setString("id", token.elementAt(1).toString());
     return true;
 
   }
 
-  static String? getToken(String body) {
+  static List<dynamic>? getToken(String body) {
     final parsed = jsonDecode(body) as Map<String, dynamic>;
-    return parsed["accessToken"];
+    return [parsed["accessToken"], parsed["idUtilisateur"]];
   }
 
 

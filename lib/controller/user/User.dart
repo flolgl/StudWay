@@ -55,25 +55,26 @@ class User {
 
   static Future<User> fetchUserInfo() async {
     final prefs = await SharedPreferences.getInstance();
-      final response =
-          await http.get(
-            Uri.parse('http://localhost:3000/users/1'),
-            headers: <String, String>{
-              'Content-Type': 'application/json; charset=UTF-8',
-              "Access-Control-Allow-Origin": "*",
-              "Authorization" : "Bearer " + prefs.getString("token"),
-            },
-          );
 
-      if (response.statusCode == 200) {
-        // If the server did return a 200 OK response,
-        // then parse the JSON.
-        return User.fromJson(jsonDecode(response.body));
-      } else {
-        // If the server did not return a 200 OK response,
-        // then throw an exception.
-        throw Exception('Impossible de récupérer les données');
-      }
+    final response = await http.get(
+
+      Uri.parse('http://localhost:3000/users/' + prefs.getString('id')),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        "Access-Control-Allow-Origin": "*",
+        "Authorization" : "Bearer " + prefs.getString("token"),
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      return User.fromJson(jsonDecode(response.body));
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Impossible de récupérer les données');
+    }
   }
 
   void updateUserCompetence(String competence) async{
