@@ -17,7 +17,7 @@ class FormationForm extends StatelessWidget{
   /// Retourne l'[AppBar] de la page affichant les conversations d'un user
   AppBar buildAppBar() {
     return AppBar(
-      title: const Text("Formation"),
+      title: const Center(child: Text("Formation")),
     );
   }
   
