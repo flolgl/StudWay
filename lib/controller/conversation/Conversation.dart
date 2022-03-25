@@ -1,28 +1,33 @@
+import 'package:studway_project/controller/user/User.dart';
+
+import 'Message.dart';
+
 class Conversation{
   int id;
   String name;
-  String avatar;
   String lastMessage;
-  String time;
-  int unread;
-  bool isGroup;
-  List<String> members;
-  Conversation(this.id, this.name, this.avatar, this.lastMessage, this.time, this.unread, this.isGroup, this.members);
+  DateTime time;
+  List<User> members;
+  Conversation(this.id, this.name, this.lastMessage, this.time, this.members);
 
-  static Future<List<Conversation>> fromJsonList(decode) {
-    return decode.map((e) => Conversation.fromJson(e)).toList();
+  static Future<List<Conversation>> fromJsonList(List<dynamic> decode) async {
+    List<Conversation> list = <Conversation>[];
+    for (var i = 0; i < decode.length; i++) {
+      list.add(await Conversation.fromJson(decode[i]));
+    }
+    return list;
   }
 
-  static fromJson(e) {
+  static Future<Conversation> fromJson(Map<String, dynamic> e) async {
+    var userA = await User.fetchStrictUserInfo(e["idUtilisateurA"]);
+    var userB = await User.fetchStrictUserInfo(e["idUtilisateurB"]);
+    var users = [userA, userB];
     return Conversation(
-      e['id'],
-      e['name'],
-      e['avatar'],
-      e['lastMessage'],
-      e['time'],
-      e['unread'],
-      e['isGroup'],
-      e['members']
+      e['idConversation'],
+      e['Libelle'],
+      e['Message'],
+      DateTime.parse(e['read_at']),
+      users
     );
   }
 

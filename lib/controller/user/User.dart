@@ -17,13 +17,12 @@ class User {
   final String _nom;
   final String _email;
   final String _description;
-  final String _profilePic;
   final String _cvFile;
 
   List<Conversation>? _conversations;
 
   User(this._id, this._nbMsg, this._prenom, this._nom, this._email,
-      this._description, this._profilePic, this._cvFile);
+      this._description, this._cvFile);
 
   factory User.fromJson(Map<String, dynamic> json) {
     //print(json);
@@ -34,10 +33,23 @@ class User {
       json['Prenom'],
       json['Email'],
       json['Description'],
-      json['PhotoProfile'],
       json['CVFile'],
     );
   }
+
+  factory User.strictFromJson(Map<String, dynamic> json) {
+    //print(json);
+    return User(
+      json['idUtilisateur'],
+      -1,
+      json['Prenom'],
+      "",
+      "",
+      "",
+      "",
+    );
+  }
+
 
   int get id => _id;
 
@@ -51,20 +63,18 @@ class User {
 
   String get description => _description;
 
-  String get profilpic => _profilePic;
+  String get profilpic => "http://localhost:3000/users/photoprofile/$_id";
 
   String get cvfile => _cvFile;
 
   List<Conversation>? get conversations => _conversations;
 
+
   /// Get the list of conversations
   /// @return the list of conversations
   /// @throws Exception if the list of conversations is null or empty
-  Future<List<Conversation>?> getConversations (bool update) async{
+  Future<List<Conversation>?> getUpdatedConversations () async{
 
-    if (!update && _conversations != null) {
-      return _conversations;
-    }
 
     final prefs = await SharedPreferences.getInstance();
 
@@ -77,22 +87,49 @@ class User {
         "Authorization" : "Bearer " + prefs.getString("token"),
       },
     );
+    print(response.body);
     if (response.statusCode == 200) {
-      return Conversation.fromJsonList(json.decode(response.body));
+      return await Conversation.fromJsonList(json.decode(response.body));
     } else {
       throw Exception('Failed to load conversation');
     }
 
-
-
   }
+
+
+  /// Get minimal user from api
+  /// @return [User] the limited user
+  /// @throws Exception if the user is null
+  static Future<User> fetchStrictUserInfo(int id) async {
+    final prefs = await SharedPreferences.getInstance();
+    print("fetching user info for id : " + id.toString());
+    final response = await http.get(
+
+      Uri.parse('http://localhost:3000/users/public/' + id.toString()),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        "Access-Control-Allow-Origin": "*",
+        "Authorization" : "Bearer " + prefs.getString("token"),
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      return User.strictFromJson(jsonDecode(response.body));
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Impossible de récupérer les données');
+    }
+  }
+
 
   /// Get a user from api
   /// @return [User] the user
   /// @throws Exception if the user is null
   static Future<User> fetchUserInfo() async {
     final prefs = await SharedPreferences.getInstance();
-
     final response = await http.get(
 
       Uri.parse('http://localhost:3000/users/' + prefs.getString('id')),

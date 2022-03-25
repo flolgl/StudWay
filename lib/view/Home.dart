@@ -79,7 +79,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   Center _buildProfileScreen() {
-    print("ran");
     return Center(
       child: _errorWhileFetching
           ? const Text(
@@ -155,7 +154,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _navigateToChatsListScreen(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ChatList()));
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ChatList(_user)));
   }
 
 }
