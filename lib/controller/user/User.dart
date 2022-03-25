@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:file_picker/file_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:studway_project/controller/conversation/Conversation.dart';
 
 class User {
   final int _id;
@@ -18,6 +19,8 @@ class User {
   final String _description;
   final String _profilePic;
   final String _cvFile;
+
+  List<Conversation>? _conversations;
 
   User(this._id, this._nbMsg, this._prenom, this._nom, this._email,
       this._description, this._profilePic, this._cvFile);
@@ -52,7 +55,41 @@ class User {
 
   String get cvfile => _cvFile;
 
+  List<Conversation>? get conversations => _conversations;
 
+  /// Get the list of conversations
+  /// @return the list of conversations
+  /// @throws Exception if the list of conversations is null or empty
+  Future<List<Conversation>?> getConversations (bool update) async{
+
+    if (!update && _conversations != null) {
+      return _conversations;
+    }
+
+    final prefs = await SharedPreferences.getInstance();
+
+    final response = await http.get(
+
+      Uri.parse('http://localhost:3000/conversation/utilisateur/' + prefs.getString('id')),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        "Access-Control-Allow-Origin": "*",
+        "Authorization" : "Bearer " + prefs.getString("token"),
+      },
+    );
+    if (response.statusCode == 200) {
+      return Conversation.fromJsonList(json.decode(response.body));
+    } else {
+      throw Exception('Failed to load conversation');
+    }
+
+
+
+  }
+
+  /// Get a user from api
+  /// @return [User] the user
+  /// @throws Exception if the user is null
   static Future<User> fetchUserInfo() async {
     final prefs = await SharedPreferences.getInstance();
 
@@ -77,6 +114,8 @@ class User {
     }
   }
 
+  /// Add a competence to the user
+  /// @param [String] the competence
   void updateUserCompetence(String competence) async{
     final prefs = await SharedPreferences.getInstance();
 
@@ -93,6 +132,7 @@ class User {
     );
   }
 
+  /// Add a cv to the user
   void setUserNewCV() async{
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
@@ -118,6 +158,9 @@ class User {
     }
   }
 
+  /// Add a competence to the user
+  /// @param [List<DateTime>] starting date as the first element and the ending date as the second element (if first element == second element, job hasn't stopped yet)
+  /// @param [List<String>] job name as the first element and the company name as the second element
   void updateUserExperiences(List<DateTime> dates, List<String>texts) async{
     final prefs = await SharedPreferences.getInstance();
 
@@ -138,7 +181,9 @@ class User {
     );
 
   }
-
+  /// Add a formation to the user
+  /// @param [List<DateTime>] starting date as the first element and the ending date as the second element (if first element == second element, job hasn't stopped yet)
+  /// @param [List<String>] formation name as the first element and the school name as the second element
   void updateUserFormation(List<DateTime> dates, List<String>texts) async{
 
     final prefs = await SharedPreferences.getInstance();
