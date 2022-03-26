@@ -3,7 +3,7 @@ import 'package:studway_project/view/offers/components/OfferContainer.dart';
 
 import '../../../controller/offer/Offer.dart';
 
-class DataSearch extends SearchDelegate<String>{
+class DataSearch extends SearchDelegate<String> {
   final suggestions = [
     "developpeur web",
     "devops",
@@ -24,32 +24,49 @@ class DataSearch extends SearchDelegate<String>{
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
-      IconButton(icon: const Icon(Icons.clear), onPressed: () {
-        query = "";
-      })
+      IconButton(
+        icon: AnimatedIcon(
+          icon: AnimatedIcons.ellipsis_search,
+          progress: transitionAnimation,
+        ),
+        onPressed: () async {
+          offerIndexList =
+          await Offer.fetchOffersByKeyword(query);
+          if(!recentSuggestions.contains(query)) {
+            recentSuggestions.add(query);
+          }
+          showResults(context);
+        },
+      ),
+      IconButton(
+          icon: const Icon(Icons.clear),
+          onPressed: () {
+            query = "";
+          })
     ];
   }
 
   @override
   Widget buildLeading(BuildContext context) {
     return IconButton(
-        icon: AnimatedIcon(
-          icon: AnimatedIcons.menu_arrow,
-          progress: transitionAnimation,
-        ),
-    onPressed: () {
-          close(context, "");
-    });
+      icon: AnimatedIcon(
+        icon: AnimatedIcons.menu_arrow,
+        progress: transitionAnimation,
+      ),
+      onPressed: () {
+        close(context, "");
+      },
+    );
   }
 
   @override
   Widget buildResults(BuildContext context) {
     List<Widget> offerListAsWidget = [];
-    for(int offerIndex in offerIndexList){
+    for (int offerIndex in offerIndexList) {
       offerListAsWidget.add(OfferContainer(offerIndex));
     }
     return ListView(
-        children: offerListAsWidget,
+      children: offerListAsWidget,
     );
   }
 
@@ -60,28 +77,31 @@ class DataSearch extends SearchDelegate<String>{
         : suggestions.where((p) => p.startsWith(query)).toList();
 
     return ListView.builder(
-        itemBuilder: (context,index) => ListTile(
-          onTap: () async {
-            offerIndexList = await Offer.fetchOffersByKeyword(suggestionList[index]);
-            showResults(context);
-          },
-          leading: const Icon(Icons.manage_search),
-          title: RichText(
-            text: TextSpan(
-              text: suggestionList[index].substring(0, query.length),
-              style: const TextStyle(
-                  color: Colors.black, fontWeight: FontWeight.bold),
-              children: [
-                TextSpan(
-                  text:suggestionList[index].substring(query.length),
-                  style: const TextStyle(color: Colors.grey),
-                ),
-              ],
-            ),
+      itemBuilder: (context, index) => ListTile(
+        onTap: () async {
+          offerIndexList =
+              await Offer.fetchOffersByKeyword(suggestionList[index]);
+          if(!recentSuggestions.contains(suggestionList[index])) {
+            recentSuggestions.add(suggestionList[index]);
+          }
+          showResults(context);
+        },
+        leading: const Icon(Icons.manage_search),
+        title: RichText(
+          text: TextSpan(
+            text: suggestionList[index].substring(0, query.length),
+            style: const TextStyle(
+                color: Colors.black, fontWeight: FontWeight.bold),
+            children: [
+              TextSpan(
+                text: suggestionList[index].substring(query.length),
+                style: const TextStyle(color: Colors.grey),
+              ),
+            ],
           ),
         ),
+      ),
       itemCount: suggestionList.length,
     );
   }
-
 }

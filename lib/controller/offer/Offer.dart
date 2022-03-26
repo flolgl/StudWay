@@ -52,6 +52,7 @@ class Offer {
 
   static Future<List<int>> fetchOffersByKeyword(String keyword) async {
     try {
+      print(keyword);
       final response = await http
           .get(Uri.parse("http://localhost:3000/annonce/motsClefs/:" + keyword));
       if (response.statusCode == 200) {
