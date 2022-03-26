@@ -53,9 +53,9 @@ class Offer {
   static Future<List<int>> fetchOffersByKeyword(String keyword) async {
     String url;
     if (keyword.contains(' ')) {
-      url = "http://localhost:3000/annonce/motsClefs/:" + keyword;
+      url = "http://localhost:3000/annonce/motsClefs/" + keyword;
     } else {
-      url = "http://localhost:3000/annonce/motClef/:" + keyword;
+      url = "http://localhost:3000/annonce/motClef/" + keyword;
     }
     try {
       final response = await http.get(Uri.parse(url));
@@ -64,7 +64,7 @@ class Offer {
         // then parse the JSON.
         List<int> fetchedOfferList = [];
         final responseLength = json.decode(response.body);
-        for (int i = 0; i < responseLength.length - 1; i++) {
+        for (int i = 0; i < responseLength.length; i++) {
           fetchedOfferList.add(jsonDecode(response.body)[i]['idAnnonce']);
         }
         return fetchedOfferList;
