@@ -51,16 +51,20 @@ class Offer {
   }
 
   static Future<List<int>> fetchOffersByKeyword(String keyword) async {
+    String url;
+    if (keyword.contains(' ')) {
+      url = "http://localhost:3000/annonce/motsClefs/:" + keyword;
+    } else {
+      url = "http://localhost:3000/annonce/motClef/:" + keyword;
+    }
     try {
-      print(keyword);
-      final response = await http
-          .get(Uri.parse("http://localhost:3000/annonce/motsClefs/:" + keyword));
+      final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         // If the server did return a 200 OK response,
         // then parse the JSON.
         List<int> fetchedOfferList = [];
         final responseLength = json.decode(response.body);
-        for(int i = 0; i < responseLength.length - 1; i++){
+        for (int i = 0; i < responseLength.length - 1; i++) {
           fetchedOfferList.add(jsonDecode(response.body)[i]['idAnnonce']);
         }
         return fetchedOfferList;
