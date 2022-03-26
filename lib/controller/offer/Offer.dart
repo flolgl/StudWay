@@ -13,7 +13,6 @@ class Offer {
       this._uploadDate);
 
   factory Offer.fromJson(Map<String, dynamic> json) {
-    print("debug");
     return Offer(
       json['idAnnonce'],
       json['titre'],
@@ -37,7 +36,6 @@ class Offer {
     try {
       final response = await http
           .get(Uri.parse("http://localhost:3000/annonce/" + id.toString()));
-      var a = id.toString();
       if (response.statusCode == 200) {
         // If the server did return a 200 OK response,
         // then parse the JSON.
@@ -52,7 +50,29 @@ class Offer {
     }
   }
 
-
+  static Future<List<int>> fetchOffersByKeyword(String keyword) async {
+    try {
+      final response = await http
+          .get(Uri.parse("http://localhost:3000/annonce/motsClefs/:" + keyword));
+      if (response.statusCode == 200) {
+        // If the server did return a 200 OK response,
+        // then parse the JSON.
+        List<int> fetchedOfferList = [];
+        final responseLength = json.decode(response.body);
+        for(int i = 0; i < responseLength.length - 1; i++){
+          fetchedOfferList.add(jsonDecode(response.body)[i]['idAnnonce']);
+        }
+        return fetchedOfferList;
+      } else {
+        // If the server did not return a 200 OK response,
+        // then throw an exception.
+        throw Exception('Status code != 200');
+      }
+    } catch (e) {
+      print(e.toString());
+      throw Exception('caught http error');
+    }
+  }
 
   int timeSinceUploadInDays() {
     var timeSinceUploadInDays = DateTime.now().difference(uploadDate).inDays;

@@ -343,9 +343,9 @@ class Profile extends StatelessWidget {
   // TODO : vraiment mettre la photo de profile
   /// Retournant un [CircleAvatar] du user
   Widget _buildCircleAvatar() {
-    return CircleAvatar(
-      minRadius: 55,
-      backgroundImage: NetworkImage(_user.profilpic),
+    return const CircleAvatar(
+      radius: 55,
+      backgroundImage: NetworkImage("http://localhost:3000/users/photoProfile/3"),
     );
   }
 

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:studway_project/view/offers/components/OfferContainer.dart';
 
+import '../../../controller/offer/Offer.dart';
+
 class DataSearch extends SearchDelegate<String>{
   final suggestions = [
     "developpeur web",
@@ -11,11 +13,13 @@ class DataSearch extends SearchDelegate<String>{
     "blablabla",
   ];
 
-  final recentSuggestions = [
+  var recentSuggestions = [
     "marketing",
     "data scientist",
     "chef de projet",
   ];
+
+  List<int> offerIndexList = [];
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -38,25 +42,14 @@ class DataSearch extends SearchDelegate<String>{
     });
   }
 
-  //TODO : FETCH DANS LA BD DES OFFRES CORRESPONDANT A LA RECHERCHE
   @override
   Widget buildResults(BuildContext context) {
-    /*  ####### Quand il y aura le backend #######
-        List<Widget> offerList = new List<Widget>();
-        for(var i = 0; i < fetchedOffers.length; i++){
-          list.add(new OfferContainer(fetchedData...));
-        }
-        return new ListView(children: list);
-      */
-    List<Widget> offerList = [
-      OfferContainer(0),
-      OfferContainer(1),
-      OfferContainer(2),
-      OfferContainer(3),
-      OfferContainer(4),
-    ];
+    List<Widget> offerListAsWidget = [];
+    for(int offerIndex in offerIndexList){
+      offerListAsWidget.add(OfferContainer(offerIndex));
+    }
     return ListView(
-        children: offerList,
+        children: offerListAsWidget,
     );
   }
 
@@ -68,7 +61,8 @@ class DataSearch extends SearchDelegate<String>{
 
     return ListView.builder(
         itemBuilder: (context,index) => ListTile(
-          onTap: () {
+          onTap: () async {
+            offerIndexList = await Offer.fetchOffersByKeyword(suggestionList[index]);
             showResults(context);
           },
           leading: const Icon(Icons.manage_search),
