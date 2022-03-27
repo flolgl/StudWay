@@ -1,14 +1,14 @@
-import 'dart:convert';
-
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
+import 'package:studway_project/view/offers/components/OfferForm.dart';
+
+import '../controller/offer/Offer.dart';
+import '../controller/user/User.dart';
 import 'Home/Profile/Profile.dart';
 import 'chat/ChatList.dart';
 import 'icons/my_flutter_app_icons.dart';
-import '../controller/user/User.dart';
 import 'offers/components/DataSearch.dart';
-
-
+import 'offers/components/OfferContainer.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -17,13 +17,13 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-
 class _HomePageState extends State<HomePage> {
   late User _user;
   bool _errorWhileFetching = false;
   bool _fetching = true;
   int _selectedIndex = 0;
-  Profile? _profileScreen = null;
+  Profile? _profileScreen;
+  List<int> _offerIndexList = [];
 
   @override
   void initState() {
@@ -32,15 +32,14 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _getUserData() async {
-    try{
+    try {
       var person = await User.fetchUserInfo();
 
-      setState((){
+      setState(() {
         _user = person;
         _fetching = false;
       });
-    }
-    catch(e){
+    } catch (e) {
       setState(() {
         _errorWhileFetching = true;
       });
@@ -62,19 +61,35 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildAppBody(){
-    if (_fetching) {
-      return const Center(child: CircularProgressIndicator(),);
-    }
+  Future<void> _getAllOffers() async {
+    _offerIndexList = await Offer.fetchAllOffersInfo();
+  }
 
-    switch(_selectedIndex){
-      case 0: return Text("Page 1");
-      case 1: return Text("page 2");
-      default: return _buildProfileScreen();
+  Widget _buildAppBody() {
+    if (_fetching) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+    _getAllOffers();
+    List<Widget> offerListAsWidget = [];
+    for (int offerIndex in _offerIndexList) {
+      offerListAsWidget.add(OfferContainer(offerIndex));
+    }
+    switch (_selectedIndex) {
+      case 0:
+        return ListView(
+          children: offerListAsWidget,
+        );
+        ;
+      case 1:
+        return OfferForm();
+      default:
+        return _buildProfileScreen();
     }
   }
 
-  Profile _getProfileScreen(){
+  Profile _getProfileScreen() {
     return _profileScreen ?? Profile(_user);
   }
 
@@ -82,12 +97,10 @@ class _HomePageState extends State<HomePage> {
     return Center(
       child: _errorWhileFetching
           ? const Text(
-          'Impossible de récupérer vos données. Veuillez réessayer plus tard.')
-          :
-          _getProfileScreen(),
+              'Impossible de récupérer vos données. Veuillez réessayer plus tard.')
+          : _getProfileScreen(),
     );
   }
-
 
   BottomNavigationBar buildBottomNavigationBar() {
     return BottomNavigationBar(
@@ -115,46 +128,45 @@ class _HomePageState extends State<HomePage> {
       centerTitle: true,
       title: const Padding(
         padding: EdgeInsets.only(top: 20.0),
-
-        child:Icon(
+        child: Icon(
           MyFlutterApp.StudWay_logo_white,
           size: 100.0,
         ),
       ),
-
       actions: <Widget>[
-        Row(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(right: 15.0),
-              child: IconButton(
-                //icon: const Icon(Icons.message_outlined),
-                icon: _fetching || _errorWhileFetching ? const Icon(Icons.message_outlined) : Badge(badgeContent: Text(_user.nbMsg.toString()), child: const Icon(Icons.message_outlined)),
-                tooltip: "",
-                onPressed: () {
-                  _navigateToChatsListScreen(context);
-
-                },
-              ),
+        Row(children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(right: 15.0),
+            child: IconButton(
+              //icon: const Icon(Icons.message_outlined),
+              icon: _fetching || _errorWhileFetching
+                  ? const Icon(Icons.message_outlined)
+                  : Badge(
+                      badgeContent: Text(_user.nbMsg.toString()),
+                      child: const Icon(Icons.message_outlined)),
+              tooltip: "",
+              onPressed: () {
+                _navigateToChatsListScreen(context);
+              },
             ),
-            Padding(
-              padding: const EdgeInsets.only(right: 30.0),
-              child: IconButton(
-                //icon: const Icon(Icons.message_outlined),
-                icon: Icon(Icons.search),
-                onPressed: () {
-                  showSearch(context: context, delegate: DataSearch());
-                },
-              ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 30.0),
+            child: IconButton(
+              //icon: const Icon(Icons.message_outlined),
+              icon: const Icon(Icons.search),
+              onPressed: () {
+                showSearch(context: context, delegate: DataSearch());
+              },
             ),
-          ]
-        ),
+          ),
+        ]),
       ],
     );
   }
 
   void _navigateToChatsListScreen(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ChatList(_user)));
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => ChatList(_user)));
   }
-
 }

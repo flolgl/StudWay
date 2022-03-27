@@ -16,7 +16,6 @@ class _OfferContainerState extends State<OfferContainer> {
   late Future<Offer> futureOffer;
   final int id;
 
-
   _OfferContainerState(this.id); //late Future<int> amountOfDaysSinceUpload;
 
   @override
@@ -119,7 +118,8 @@ class _OfferContainerState extends State<OfferContainer> {
                       ),
                       child: RichText(
                         text: TextSpan(
-                          text: "Il y a " + snapshot.data!.timeSinceUploadInDays().toString()  +" jours",
+                          text:
+                              snapshot.data!.timeSinceUploadInDays().toString(),
                           style: const TextStyle(
                             fontSize: 13,
                             color: Colors.grey,
@@ -131,8 +131,7 @@ class _OfferContainerState extends State<OfferContainer> {
                   ],
                 ),
               );
-            }
-            else if (snapshot.hasError) {
+            } else if (snapshot.hasError) {
               return const Text(
                   'Impossible de récupérer vos données. Veuillez réessayer plus tard.');
             }
@@ -143,30 +142,3 @@ class _OfferContainerState extends State<OfferContainer> {
     );
   }
 }
-
-/*
-Padding(
-                  padding: const EdgeInsets.only(
-                    left: 15,
-                  ),
-                  child: FutureBuilder<Offer>(
-                      future: futureOffer,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return RichText(
-                            text: TextSpan(
-                              text: snapshot.data!.companyName,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                color: Colors.black,
-                                fontWeight: FontWeight.normal,
-                              ),
-                            ),
-                          );
-                        } else if (snapshot.hasError) {
-                          return const Text(
-                              'Impossible de récupérer vos données. Veuillez réessayer plus tard.');
-                        }
-                        return const CircularProgressIndicator();
-                      })),
- */

@@ -1,12 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:path/path.dart';
-import 'package:path/path.dart';
-import 'package:async/async.dart';
-import 'dart:io';
-import 'package:http/http.dart' as http;
 
+import 'package:async/async.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:http/http.dart' as http;
+import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studway_project/controller/conversation/Conversation.dart';
 
@@ -50,7 +48,6 @@ class User {
     );
   }
 
-
   int get id => _id;
 
   int get nbMsg => _nbMsg;
@@ -69,22 +66,19 @@ class User {
 
   List<Conversation>? get conversations => _conversations;
 
-
   /// Get the list of conversations
   /// @return the list of conversations
   /// @throws Exception if the list of conversations is null or empty
-  Future<List<Conversation>?> getUpdatedConversations () async{
-
-
+  Future<List<Conversation>?> getUpdatedConversations() async {
     final prefs = await SharedPreferences.getInstance();
 
     final response = await http.get(
-
-      Uri.parse('http://localhost:3000/conversation/utilisateur/' + prefs.getString('id')),
+      Uri.parse('http://localhost:3000/conversation/utilisateur/' +
+          prefs.getString('id')),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Access-Control-Allow-Origin": "*",
-        "Authorization" : "Bearer " + prefs.getString("token"),
+        "Authorization": "Bearer " + prefs.getString("token"),
       },
     );
     print(response.body);
@@ -93,9 +87,7 @@ class User {
     } else {
       throw Exception('Failed to load conversation');
     }
-
   }
-
 
   /// Get minimal user from api
   /// @return [User] the limited user
@@ -104,12 +96,11 @@ class User {
     final prefs = await SharedPreferences.getInstance();
     print("fetching user info for id : " + id.toString());
     final response = await http.get(
-
       Uri.parse('http://localhost:3000/users/public/' + id.toString()),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Access-Control-Allow-Origin": "*",
-        "Authorization" : "Bearer " + prefs.getString("token"),
+        "Authorization": "Bearer " + prefs.getString("token"),
       },
     );
 
@@ -124,19 +115,17 @@ class User {
     }
   }
 
-
   /// Get a user from api
   /// @return [User] the user
   /// @throws Exception if the user is null
   static Future<User> fetchUserInfo() async {
     final prefs = await SharedPreferences.getInstance();
     final response = await http.get(
-
       Uri.parse('http://localhost:3000/users/' + prefs.getString('id')),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Access-Control-Allow-Origin": "*",
-        "Authorization" : "Bearer " + prefs.getString("token"),
+        "Authorization": "Bearer " + prefs.getString("token"),
       },
     );
 
@@ -153,7 +142,7 @@ class User {
 
   /// Add a competence to the user
   /// @param [String] the competence
-  void updateUserCompetence(String competence) async{
+  void updateUserCompetence(String competence) async {
     final prefs = await SharedPreferences.getInstance();
 
     http.post(
@@ -161,19 +150,17 @@ class User {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Access-Control-Allow-Origin": "*",
-        "Authorization" : "Bearer " + prefs.getString("token"),
+        "Authorization": "Bearer " + prefs.getString("token"),
       },
-      body: jsonEncode(<String, String>{
-        'competence':competence
-      }),
+      body: jsonEncode(<String, String>{'competence': competence}),
     );
   }
 
   /// Add a cv to the user
-  void setUserNewCV() async{
+  void setUserNewCV() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: [ 'pdf'],
+      allowedExtensions: ['pdf'],
     );
     if (result != null) {
       File file = File(result.files.single.path);
@@ -183,13 +170,14 @@ class User {
       var length = await file.length();
 
       final prefs = await SharedPreferences.getInstance();
-      var request = http.MultipartRequest("POST", Uri.parse("http://localhost:3000/users/cvhandler"));
+      var request = http.MultipartRequest(
+          "POST", Uri.parse("http://localhost:3000/users/cvhandler"));
       request.headers["Authorization"] = "Bearer " + prefs.getString("token");
       request.fields["idUtilisateur"] = id.toString();
-      var multipartFile = http.MultipartFile('cvFile', stream, length, filename: basename(file.path));
+      var multipartFile = http.MultipartFile('cvFile', stream, length,
+          filename: basename(file.path));
       request.files.add(multipartFile);
       var response = await request.send();
-
     } else {
       throw Exception("Err 01: File null");
     }
@@ -198,16 +186,18 @@ class User {
   /// Add a competence to the user
   /// @param [List<DateTime>] starting date as the first element and the ending date as the second element (if first element == second element, job hasn't stopped yet)
   /// @param [List<String>] job name as the first element and the company name as the second element
-  void updateUserExperiences(List<DateTime> dates, List<String>texts) async{
+  void updateUserExperiences(List<DateTime> dates, List<String> texts) async {
     final prefs = await SharedPreferences.getInstance();
 
-    var dateFin = dates.elementAt(1) == dates.elementAt(0) ? "-1" : dates.elementAt(1).millisecondsSinceEpoch.toString();
+    var dateFin = dates.elementAt(1) == dates.elementAt(0)
+        ? "-1"
+        : dates.elementAt(1).millisecondsSinceEpoch.toString();
     http.post(
       Uri.parse("http://localhost:3000/users/update/"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Access-Control-Allow-Origin": "*",
-        "Authorization" : "Bearer " + prefs.getString("token"),
+        "Authorization": "Bearer " + prefs.getString("token"),
       },
       body: jsonEncode(<String, String>{
         'dateDebut': dates.elementAt(0).millisecondsSinceEpoch.toString(),
@@ -216,30 +206,32 @@ class User {
         'entrepriseName': texts.elementAt(1),
       }),
     );
-
   }
+
   /// Add a formation to the user
   /// @param [List<DateTime>] starting date as the first element and the ending date as the second element (if first element == second element, job hasn't stopped yet)
   /// @param [List<String>] formation name as the first element and the school name as the second element
-  void updateUserFormation(List<DateTime> dates, List<String>texts) async{
-
+  void updateUserFormation(List<DateTime> dates, List<String> texts) async {
     final prefs = await SharedPreferences.getInstance();
 
-    var dateFin = dates.elementAt(1) == dates.elementAt(0) ? "-1" : dates.elementAt(1).millisecondsSinceEpoch.toString();
+    var dateFin = dates.elementAt(1) == dates.elementAt(0)
+        ? "-1"
+        : dates.elementAt(1).millisecondsSinceEpoch.toString();
     http.post(
       Uri.parse("http://localhost:3000/users/update/"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Access-Control-Allow-Origin": "*",
-        "Authorization" : "Bearer " + prefs.getString("token"),
+        "Authorization": "Bearer " + prefs.getString("token"),
       },
-      body: jsonEncode(<String, String>{
-        'dateDebut': dates.elementAt(0).millisecondsSinceEpoch.toString(),
-        'dateFin': dateFin,
-        'formationName': texts.elementAt(0),
-        'ecoleName': texts.elementAt(1),
-      }),
+      body: jsonEncode(
+        <String, String>{
+          'dateDebut': dates.elementAt(0).millisecondsSinceEpoch.toString(),
+          'dateFin': dateFin,
+          'formationName': texts.elementAt(0),
+          'ecoleName': texts.elementAt(1),
+        },
+      ),
     );
-
   }
 }

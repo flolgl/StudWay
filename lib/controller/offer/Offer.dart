@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Offer {
   final int _idAnnonce;
@@ -79,8 +81,53 @@ class Offer {
     }
   }
 
-  int timeSinceUploadInDays() {
+  String timeSinceUploadInDays() {
     var timeSinceUploadInDays = DateTime.now().difference(uploadDate).inDays;
-    return timeSinceUploadInDays;
+    return timeSinceUploadInDays == 0
+        ? "Aujourd'hui"
+        : "Il y a " + timeSinceUploadInDays.toString() + " jours";
+  }
+
+  static Future<List<int>> fetchAllOffersInfo() async {
+    try {
+      final response =
+          await http.get(Uri.parse("http://localhost:3000/annonces/all"));
+      if (response.statusCode == 200) {
+        // If the server did return a 200 OK response,
+        // then parse the JSON.
+        List<int> fetchedOfferList = [];
+        final responseLength = json.decode(response.body);
+        for (int i = 0; i < responseLength.length; i++) {
+          fetchedOfferList.add(jsonDecode(response.body)[i]['idAnnonce']);
+        }
+        return fetchedOfferList;
+      } else {
+        // If the server did not return a 200 OK response,
+        // then throw an exception.
+        throw Exception('Status code != 200');
+      }
+    } catch (e) {
+      print(e.toString());
+      throw Exception('caught http error');
+    }
+  }
+
+  static void createNewOffer(String jobTitle, String location, String description/*, Image image*/) async {
+    final prefs = await SharedPreferences.getInstance();
+    http.post(
+      Uri.parse("http://localhost:3000/annonce/create"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        "Access-Control-Allow-Origin": "*",
+        "Authorization": "Bearer " + prefs.getString("token"),
+      },
+      body: jsonEncode(
+        <String, String>{
+          'titre': jobTitle,
+          'location': location,
+          'Description': description,
+        },
+      ),
+    );
   }
 }
