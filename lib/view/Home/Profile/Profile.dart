@@ -14,6 +14,7 @@ import 'pages/CompetenceForm.dart';
 
 class Profile extends StatefulWidget {
   final User user;
+
   const Profile(this.user, {Key? key}) : super(key: key);
 
   @override
@@ -35,57 +36,55 @@ class _ProfileState extends State<Profile> {
       ]),
     );
     return Container(
-        width: double.infinity,
-        decoration: gradientDecoration,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-        const SizedBox(
-        height: 30,
-        ),
-        Center(
-          child: _buildCircleAvatar(),
-        ),
-        Center(
-          child: buildButton(
-              title: 'Choisir depuis la galerie',
-              icon: Icons.image_outlined,
-              onClicked: () => pickImage(ImageSource.gallery),
-        )),
-            Center(
-                child: buildButton(
-                  title: 'Prendre une photo',
-                  icon: Icons.image_outlined,
-                  onClicked: () => pickImage(ImageSource.gallery),
-                )),
-    const SizedBox(
-    height: 30,
-    ),
+      width: double.infinity,
+      decoration: gradientDecoration,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          const SizedBox(
+            height: 30,
+          ),
+          Center(
+            child: _buildCircleAvatar(),
+          ),
+          Center(
+              child: buildButton(
+            title: 'Choisir depuis la galerie',
+            icon: Icons.image_outlined,
+            onClicked: () => pickImage(ImageSource.gallery),
+          )),
+          Center(
+              child: buildButton(
+            title: 'Prendre une photo',
+            icon: Icons.image_outlined,
+            onClicked: () => pickImage(ImageSource.gallery),
+          )),
+          const SizedBox(
+            height: 30,
+          ),
 
-    // Le container de la partie Options (container avec bg white)
-    Expanded(
-    child: Container(
-    width: double.infinity,
-    decoration: const BoxDecoration(
-    color: Colors.white,
-    ),
-    child: SingleChildScrollView(
-    child: Column(
-    children: [
-    _buildStatsInfo(context),
-    Padding(
-    padding: const EdgeInsets.all(15.0),
-    child: _buildOptionsBody(context),
-    ),
-    ],
-    ),
-    ),
-    ),
-    ),
-    ]
-    ,
-    )
-    ,
+          // Le container de la partie Options (container avec bg white)
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    _buildStatsInfo(context),
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: _buildOptionsBody(context),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
 
     // return Center(
@@ -95,10 +94,7 @@ class _ProfileState extends State<Profile> {
 
   /// Méthode retournant le form de connexion
   Widget _buildOptionsBody(BuildContext context) {
-    double width = MediaQuery
-        .of(context)
-        .size
-        .width;
+    double width = MediaQuery.of(context).size.width;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
@@ -356,27 +352,28 @@ class _ProfileState extends State<Profile> {
   void _buildErrorPopUp(BuildContext context) {
     showDialog<String>(
       context: context,
-      builder: (BuildContext context) =>
-          AlertDialog(
-            title: const Text('Impossible sur navigateur internet'),
-            actions: <Widget>[
-              Center(
-                child: TextButton(
-                  onPressed: () => Navigator.pop(context, 'OK'),
-                  child: const Text('OK'),
-                ),
-              ),
-            ],
+      builder: (BuildContext context) => AlertDialog(
+        title: const Text('Impossible sur navigateur internet'),
+        actions: <Widget>[
+          Center(
+            child: TextButton(
+              onPressed: () => Navigator.pop(context, 'OK'),
+              child: const Text('OK'),
+            ),
           ),
+        ],
+      ),
     );
   }
 
   // TODO : vraiment mettre la photo de profile
   /// Retournant un [CircleAvatar] du user
   Widget _buildCircleAvatar() {
+    print(_user.profilpic);
+    var shownImage = image != null ? Image.file(image!) as ImageProvider : NetworkImage(_user.profilpic);
     return CircleAvatar(
       radius: 45,
-      backgroundImage: NetworkImage(_user.profilpic),
+      backgroundImage: shownImage,
     );
   }
 
