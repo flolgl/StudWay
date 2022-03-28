@@ -48,7 +48,7 @@ class _ProfileState extends State<Profile> {
         ),
         Center(
           child: buildButton(
-              title: 'Choisir depuis la gallerie',
+              title: 'Choisir depuis la galerie',
               icon: Icons.image_outlined,
               onClicked: () => pickImage(ImageSource.gallery),
         )),
