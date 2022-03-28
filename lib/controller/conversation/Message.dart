@@ -1,15 +1,26 @@
 class Message {
-  String text;
-  String time;
-  String sender;
-  String type;
-  Message(this.text, this.time, this.sender, this.type);
+  final String text;
+  final DateTime time;
+  final int idSender;
+  Message(this.text, this.time, this.idSender);
+
   static fromJson(e) {
     return Message(
-        e['text'],
-        e['time'],
-        e['sender'],
-        e['type']
+        e['Message'],
+        e['DateEnvoie'] != null
+            ? DateTime.parse(e['DateEnvoie'])
+            : DateTime.now(),
+        e['idUtilisateur'],
     );
   }
+
+  static List<Message> fromJsonList(jsonDecode) {
+    List<Message> list = <Message>[];
+    for (var e in jsonDecode) {
+      list.add(Message.fromJson(e));
+    }
+    return list;
+  }
+
+
 }

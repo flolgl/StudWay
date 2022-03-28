@@ -5,12 +5,14 @@ import 'package:path/path.dart';
 import 'package:async/async.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import 'package:file_picker/file_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studway_project/controller/conversation/Conversation.dart';
 
 class User {
+  static User? currentUser;
   final int _id;
   final int _nbMsg;
   final String _prenom;
@@ -18,10 +20,20 @@ class User {
   final String _email;
   final String _description;
   final String _cvFile;
+  late IO.Socket _socket;
+
+
 
   List<Conversation>? _conversations;
 
   User(this._id, this._nbMsg, this._prenom, this._nom, this._email,
+      this._description, this._cvFile) {
+    connectUserToSocket();
+    getUpdatedConversations();
+    currentUser = this;
+  }
+
+  User.strict(this._id, this._nbMsg, this._prenom, this._nom, this._email,
       this._description, this._cvFile);
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -38,12 +50,12 @@ class User {
   }
 
   factory User.strictFromJson(Map<String, dynamic> json) {
-    //print(json);
-    return User(
+    print(json);
+    return User.strict(
       json['idUtilisateur'],
       -1,
-      json['Prenom'],
-      "",
+      json['Nom'] == null ? "" : json['Nom'],
+      json['Prenom'] == null ? "" : json['Prenom'],
       "",
       "",
       "",
@@ -69,13 +81,32 @@ class User {
 
   List<Conversation>? get conversations => _conversations;
 
+  IO.Socket get socket => _socket;
+
+
+
+  void connectUserToSocket(){
+    print("connecting user to socket");
+    _socket = IO.io('http://localhost:3001', <String, dynamic>{
+      'transports': ['websocket'],
+      'autoConnect': false,
+    });
+    _socket.connect();
+    _socket.emit("identification", {"userId" : _id});
+
+  }
+
+  void sendNewMsg(int convId, int to, String content){
+    _socket.emit("newMsg", {"to": to, "content": content, "convId":convId, "from": _id});
+  }
+
 
   /// Get the list of conversations
   /// @return the list of conversations
   /// @throws Exception if the list of conversations is null or empty
-  Future<List<Conversation>?> getUpdatedConversations () async{
+  Future<List<Conversation>> getUpdatedConversations () async{
 
-
+    print("getUpdatedConversations");
     final prefs = await SharedPreferences.getInstance();
 
     final response = await http.get(

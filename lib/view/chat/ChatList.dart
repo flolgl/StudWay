@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:studway_project/controller/conversation/Conversation.dart';
 import 'package:studway_project/controller/user/User.dart';
+import 'package:studway_project/view/utils/Utils.dart';
 
 import 'components/ConversationView.dart';
 
@@ -54,12 +55,6 @@ class _ChatListState extends State<ChatList>{
   AppBar buildAppBar() {
     return AppBar(
       title: const Text("Messages"),
-      actions: [
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.search),
-        ),
-      ],
 
     );
   }
@@ -98,47 +93,49 @@ class _ChatListState extends State<ChatList>{
   /// @see Conversation
   Widget _buildConversationView(BuildContext context, int index) {
     final Conversation conv = _conversations![index];
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      child: GestureDetector(
-        onTap: () {
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) => ConversationView(conv)));
-        },
-        child: Container(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              CircleAvatar(
-                backgroundImage: NetworkImage(conv.members.elementAt(0).profilpic),
-              ),
-              const SizedBox(width: 8.0),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      conv.members.elementAt(0).prenom,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 4.0),
-                    Text(
-                      conv.lastMessage,
-                      style: const TextStyle(
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
+    return Container(
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: GestureDetector(
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => ConversationView(conv)));
+          },
+          child: Container(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  backgroundImage: NetworkImage(conv.members.elementAt(0).profilpic),
                 ),
-              ),
-              const Text(
-                "mettre le timestamp",
-                style: TextStyle(
-                  color: Colors.grey,
+                const SizedBox(width: 8.0),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        conv.members.elementAt(0).nom + " " + conv.members.elementAt(0).prenom,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 4.0),
+                      Text(
+                        conv.lastMessage.text,
+                        style: const TextStyle(
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+                Text(
+                  Utils.getDiff(conv.lastMessage.time, DateTime.now()).toString(),
+                  style: TextStyle(
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
