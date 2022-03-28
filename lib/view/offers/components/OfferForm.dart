@@ -11,7 +11,7 @@ class OfferForm extends StatelessWidget{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(),
-      body: AddOfferBody(),
+      body: const AddOfferBody(),
     );
   }
 
