@@ -42,8 +42,9 @@ class LoginAuth {
 
     final List<dynamic>? token = getToken(response.body);
 
-    if (response.statusCode!=200 || token == null)
+    if (response.statusCode!=200 || token == null) {
       return false;
+    }
 
     final prefs = await SharedPreferences.getInstance();
     prefs.setString("token", token.elementAt(0));

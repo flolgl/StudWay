@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:studway_project/view/offers/components/OfferContainer.dart';
 
-class DataSearch extends SearchDelegate<String>{
+import '../../../controller/offer/Offer.dart';
+
+class DataSearch extends SearchDelegate<String> {
   final suggestions = [
     "developpeur web",
     "devops",
@@ -11,52 +13,60 @@ class DataSearch extends SearchDelegate<String>{
     "blablabla",
   ];
 
-  final recentSuggestions = [
+  var recentSuggestions = [
     "marketing",
     "data scientist",
     "chef de projet",
   ];
 
+  List<int> offerIndexList = [];
+
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
-      IconButton(icon: const Icon(Icons.clear), onPressed: () {
-        query = "";
-      })
+      IconButton(
+        icon: AnimatedIcon(
+          icon: AnimatedIcons.ellipsis_search,
+          progress: transitionAnimation,
+        ),
+        onPressed: () async {
+          offerIndexList =
+          await Offer.fetchOffersByKeyword(query);
+          if(!recentSuggestions.contains(query)) {
+            recentSuggestions.add(query);
+          }
+          showResults(context);
+        },
+      ),
+      IconButton(
+          icon: const Icon(Icons.clear),
+          onPressed: () {
+            query = "";
+          })
     ];
   }
 
   @override
   Widget buildLeading(BuildContext context) {
     return IconButton(
-        icon: AnimatedIcon(
-          icon: AnimatedIcons.menu_arrow,
-          progress: transitionAnimation,
-        ),
-    onPressed: () {
-          close(context, "");
-    });
+      icon: AnimatedIcon(
+        icon: AnimatedIcons.menu_arrow,
+        progress: transitionAnimation,
+      ),
+      onPressed: () {
+        close(context, "");
+      },
+    );
   }
 
-  //TODO : FETCH DANS LA BD DES OFFRES CORRESPONDANT A LA RECHERCHE
   @override
   Widget buildResults(BuildContext context) {
-    /*  ####### Quand il y aura le backend #######
-        List<Widget> offerList = new List<Widget>();
-        for(var i = 0; i < fetchedOffers.length; i++){
-          list.add(new OfferContainer(fetchedData...));
-        }
-        return new ListView(children: list);
-      */
-    List<Widget> offerList = [
-      OfferContainer(0),
-      OfferContainer(1),
-      OfferContainer(2),
-      OfferContainer(3),
-      OfferContainer(4),
-    ];
+    List<Widget> offerListAsWidget = [];
+    for (int offerIndex in offerIndexList) {
+      offerListAsWidget.add(OfferContainer(offerIndex));
+    }
     return ListView(
-        children: offerList,
+      children: offerListAsWidget,
     );
   }
 
@@ -67,27 +77,31 @@ class DataSearch extends SearchDelegate<String>{
         : suggestions.where((p) => p.startsWith(query)).toList();
 
     return ListView.builder(
-        itemBuilder: (context,index) => ListTile(
-          onTap: () {
-            showResults(context);
-          },
-          leading: const Icon(Icons.manage_search),
-          title: RichText(
-            text: TextSpan(
-              text: suggestionList[index].substring(0, query.length),
-              style: const TextStyle(
-                  color: Colors.black, fontWeight: FontWeight.bold),
-              children: [
-                TextSpan(
-                  text:suggestionList[index].substring(query.length),
-                  style: const TextStyle(color: Colors.grey),
-                ),
-              ],
-            ),
+      itemBuilder: (context, index) => ListTile(
+        onTap: () async {
+          offerIndexList =
+              await Offer.fetchOffersByKeyword(suggestionList[index]);
+          if(!recentSuggestions.contains(suggestionList[index])) {
+            recentSuggestions.add(suggestionList[index]);
+          }
+          showResults(context);
+        },
+        leading: const Icon(Icons.manage_search),
+        title: RichText(
+          text: TextSpan(
+            text: suggestionList[index].substring(0, query.length),
+            style: const TextStyle(
+                color: Colors.black, fontWeight: FontWeight.bold),
+            children: [
+              TextSpan(
+                text: suggestionList[index].substring(query.length),
+                style: const TextStyle(color: Colors.grey),
+              ),
+            ],
           ),
         ),
+      ),
       itemCount: suggestionList.length,
     );
   }
-
 }

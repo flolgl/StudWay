@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:studway_project/controller/user/User.dart';
 import 'package:studway_project/view/Home/Profile/pages/ExperienceForm.dart';
 import 'package:studway_project/view/Home/Profile/pages/FormationForm.dart';
@@ -8,10 +12,20 @@ import 'package:studway_project/view/Home/Profile/pages/FormationForm.dart';
 import '../../AppTheme.dart';
 import 'pages/CompetenceForm.dart';
 
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
+  final User user;
+
+  const Profile(this.user, {Key? key}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _ProfileState(user);
+}
+
+class _ProfileState extends State<Profile> {
+  File? image;
   final User _user;
 
-  const Profile(this._user, {Key? key}) : super(key: key);
+  _ProfileState(this._user);
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +47,18 @@ class Profile extends StatelessWidget {
           Center(
             child: _buildCircleAvatar(),
           ),
+          Center(
+              child: buildButton(
+            title: 'Choisir depuis la galerie',
+            icon: Icons.image_outlined,
+            onClicked: () => pickImage(ImageSource.gallery),
+          )),
+          Center(
+              child: buildButton(
+            title: 'Prendre une photo',
+            icon: Icons.image_outlined,
+            onClicked: () => pickImage(ImageSource.gallery),
+          )),
           const SizedBox(
             height: 30,
           ),
@@ -343,9 +369,11 @@ class Profile extends StatelessWidget {
   // TODO : vraiment mettre la photo de profile
   /// Retournant un [CircleAvatar] du user
   Widget _buildCircleAvatar() {
+    print(_user.profilpic);
+    var shownImage = image != null ? Image.file(image!) as ImageProvider : NetworkImage(_user.profilpic);
     return CircleAvatar(
-      minRadius: 55,
-      backgroundImage: NetworkImage(_user.profilpic),
+      radius: 45,
+      backgroundImage: shownImage,
     );
   }
 
@@ -444,7 +472,41 @@ class Profile extends StatelessWidget {
   void _navigateToProfileForm(BuildContext context) {
     ;
   }
+
+  Future pickImage(ImageSource source) async {
+    try {
+      final image = await ImagePicker.pickImage(source: ImageSource.camera);
+      final imageTemporary = File(image.path);
+      setState(() => this.image = imageTemporary);
+    } on PlatformException catch (e) {
+      throw Exception(e.toString());
+    }
+  }
 }
+
+Widget buildButton({
+  required String title,
+  required IconData icon,
+  required VoidCallback onClicked,
+}) =>
+    Container(
+      margin: const EdgeInsets.only(top: 20.0),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+            fixedSize: const Size(240, 35),
+            primary: Colors.white,
+            onPrimary: Colors.black,
+            textStyle: const TextStyle(fontSize: 15)),
+        child: Row(
+          children: [
+            Icon(icon, size: 28),
+            const SizedBox(width: 16),
+            Text(title),
+          ],
+        ),
+        onPressed: onClicked,
+      ),
+    );
 
 //
 // Container(

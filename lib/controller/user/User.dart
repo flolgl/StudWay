@@ -1,13 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:path/path.dart';
-import 'package:path/path.dart';
+
 import 'package:async/async.dart';
-import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
-import 'package:file_picker/file_picker.dart';
+import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studway_project/controller/conversation/Conversation.dart';
 
