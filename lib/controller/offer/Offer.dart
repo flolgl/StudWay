@@ -53,12 +53,8 @@ class Offer {
   }
 
   static Future<List<int>> fetchOffersByKeyword(String keyword) async {
-    String url;
-    if (keyword.contains(' ')) {
-      url = "http://localhost:3000/annonce/motsClefs/" + keyword;
-    } else {
-      url = "http://localhost:3000/annonce/motClef/" + keyword;
-    }
+    keyword = keyword.replaceAll(' ', ';');
+    String url = "http://localhost:3000/annonce/motsClefs/" + keyword;
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
