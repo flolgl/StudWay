@@ -87,7 +87,13 @@ class Offer {
   static Future<List<int>> fetchAllOffersInfo() async {
     try {
       final response =
-          await http.get(Uri.parse("http://localhost:3000/annonces/all"));
+          await http.get(Uri.parse("http://localhost:3000/annonces/all")).timeout(
+            const Duration(seconds: 10),
+            onTimeout: () {
+              throw Exception('Impossible de récupérer les données');
+            },
+          );
+
       if (response.statusCode == 200) {
         // If the server did return a 200 OK response,
         // then parse the JSON.

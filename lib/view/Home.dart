@@ -28,14 +28,16 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _getUserData();
+    getData();
   }
 
-  void _getUserData() async {
+  void getData() async {
     try {
       var person = await User.fetchUserInfo();
+      var offers = await Offer.fetchAllOffersInfo();
 
       setState(() {
+        _offerIndexList = offers;
         _user = person;
         _fetching = false;
       });
@@ -61,29 +63,28 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<void> _getAllOffers() async {
-    _offerIndexList = await Offer.fetchAllOffersInfo();
-  }
-
   Widget _buildAppBody() {
     if (_fetching) {
       return const Center(
         child: CircularProgressIndicator(),
       );
     }
-    _getAllOffers();
-    List<Widget> offerListAsWidget = [];
-    for (int offerIndex in _offerIndexList) {
-      offerListAsWidget.add(OfferContainer(offerIndex));
+    if (_errorWhileFetching) {
+      return const Center(
+        child: Text('Error while fetching data'),
+      );
     }
+
     switch (_selectedIndex) {
       case 0:
-        return ListView(
-          children: offerListAsWidget,
+        return ListView.builder(
+          itemCount: _offerIndexList.length,
+          itemBuilder: (context, index) {
+            return OfferContainer(_offerIndexList[index],);
+          },
         );
-        ;
       case 1:
-        return OfferForm();
+        return const OfferForm();
       default:
         return _buildProfileScreen();
     }
