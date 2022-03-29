@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:studway_project/controller/candidature/Candidature.dart';
 import 'package:studway_project/controller/conversation/Conversation.dart';
 import 'package:studway_project/controller/offer/Offer.dart';
 
@@ -325,6 +326,47 @@ class User {
     final prefs = await SharedPreferences.getInstance();
     final response = await http.post(
       Uri.parse("http://localhost:3000/annonce/deleteFav/" + id.toString() + "/" + _id.toString()),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        "Access-Control-Allow-Origin": "*",
+        "Authorization": "Bearer " + prefs.getString("token"),
+      },
+    );
+    if(response.statusCode != 200){
+      return false;
+    }
+    return true;
+  }
+
+  Future<List<Candidature>> fetchCandidature() async{
+    final prefs = await SharedPreferences.getInstance();
+
+    return http.get(
+      Uri.parse("http://localhost:3000/candidatures/candidat/" + id.toString()),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        "Access-Control-Allow-Origin": "*",
+        "Authorization": "Bearer " + prefs.getString("token"),
+      },
+    ).then((http.Response response) {
+      if (response.statusCode != 200) {
+        throw Exception("Err 04: Fetch failed");
+      }
+
+      List<Candidature> list = <Candidature>[];
+      // print(response.body);
+      var data = json.decode(response.body);
+      for (var i = 0; i < data.length; i++) {
+        list.add(Candidature.fromJson(data[i]));
+      }
+      return list;
+    });
+  }
+
+  Future<bool> deleteCandidature(int id) async{
+    final prefs = await SharedPreferences.getInstance();
+    final response = await http.post(
+      Uri.parse("http://localhost:3000/candidatures/delete/" + id.toString() + "/" + _id.toString()),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Access-Control-Allow-Origin": "*",
