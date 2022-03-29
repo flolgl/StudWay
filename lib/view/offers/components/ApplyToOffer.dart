@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:studway_project/controller/offer/Offer.dart';
 import 'package:studway_project/controller/user/User.dart';
 
+import '../../AppTheme.dart';
 import '../../icons/my_flutter_app_icons.dart';
 
 class ApplyToOffer extends StatefulWidget {
@@ -20,6 +21,7 @@ class ApplyToOfferState extends State<ApplyToOffer> {
   final User _user;
   final Offer _offer;
   final TextEditingController _coverLetterController = TextEditingController();
+  String warningMessage = "";
 
   ApplyToOfferState(
       this._user, this._offer); //late Future<int> amountOfDaysSinceUpload;
@@ -107,7 +109,7 @@ class ApplyToOfferState extends State<ApplyToOffer> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     fixedSize: const Size(280, 35),
-                    primary: Colors.blue,
+                    primary: AppTheme.normalBlue,
                     onPrimary: Colors.white,
                     textStyle: const TextStyle(fontSize: 15)),
                 child: Row(
@@ -117,9 +119,30 @@ class ApplyToOfferState extends State<ApplyToOffer> {
                     Text("Confirmer votre candidature"),
                   ],
                 ),
-                onPressed: () {
-                  _user.applyTo(_offer);
+                onPressed: () async {
+                  if (_coverLetterController.text.isEmpty) {
+                    setState(() {
+                      warningMessage =
+                          "Vous n'avez rien écrit, veuillez saisir une lettre de motivation";
+                    });
+                    return;
+                  }
+                  var reponse = await _user.applyTo(
+                      _offer, _coverLetterController.text, warningMessage);
+                  setState(() {
+                    warningMessage = reponse ? "" : "Vous avez déjà postulé à cette annonce";
+                  });
                 },
+              ),
+            ),
+            RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                text: warningMessage,
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: Colors.red,
+                ),
               ),
             ),
           ],

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../controller/offer/Offer.dart';
 import '../../../controller/user/User.dart';
+import '../../AppTheme.dart';
 import '../../icons/my_flutter_app_icons.dart';
 import 'ApplyToOffer.dart';
 
@@ -147,7 +148,7 @@ class _OfferFullViewState extends State<OfferFullView> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     fixedSize: const Size(220, 35),
-                    primary: Colors.blue,
+                    primary: AppTheme.normalBlue,
                     onPrimary: Colors.white,
                     textStyle: const TextStyle(fontSize: 15)),
                 child: Row(

@@ -273,7 +273,7 @@ class User {
   }
 
   void createNewOffer(String jobTitle, String location,
-      String description /*, Image image*/) async {
+      String description) async {
     final prefs = await SharedPreferences.getInstance();
     try {
       http.post(
@@ -379,7 +379,35 @@ class User {
     return true;
   }
 
-  
-  void applyTo(Offer offer) {}
+
+  Future<bool> applyTo(Offer offer, String lettreMotivation, String warningMessage) async {
+    final prefs = await SharedPreferences.getInstance();
+    try {
+      var request = await http.post(
+        Uri.parse("http://localhost:3000/candidature/create"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          "Access-Control-Allow-Origin": "*",
+          "Authorization": "Bearer " + prefs.getString("token"),
+        },
+        body: jsonEncode(
+          <String, String>{
+            'idAnnonce': offer.id.toString(),
+            'idCandidat': id.toString(),
+            'CVFile': _cvFile,
+            'LettreMotivation': lettreMotivation,
+          },
+        ),
+      );
+
+      if(request.statusCode == 403){
+        return false;
+      }
+      return true;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
 
 }
