@@ -8,6 +8,7 @@ import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:studway_project/controller/conversation/Conversation.dart';
+import 'package:studway_project/controller/offer/Offer.dart';
 
 class User {
   static User? currentUser;
@@ -295,4 +296,45 @@ class User {
       throw Exception;
     }
   }
+
+  Future<List<Offer>> fetchCandidatFav() async{
+    final prefs = await SharedPreferences.getInstance();
+    return http.get(
+      Uri.parse("http://localhost:3000/annonce/favoris/" + id.toString()),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        "Access-Control-Allow-Origin": "*",
+        "Authorization": "Bearer " + prefs.getString("token"),
+      },
+    ).then((http.Response response) {
+      if (response.statusCode != 200) {
+        throw Exception("Err 02: Fetch failed");
+      }
+
+      List<Offer> list = <Offer>[];
+      // print(response.body);
+      var data = json.decode(response.body);
+      for (var i = 0; i < data.length; i++) {
+        list.add(Offer.fromJson(data[i]));
+      }
+      return list;
+    });
+  }
+
+  Future<bool> deleteFav(int id) async{
+    final prefs = await SharedPreferences.getInstance();
+    final response = await http.post(
+      Uri.parse("http://localhost:3000/annonce/deleteFav/" + id.toString() + "/" + _id.toString()),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        "Access-Control-Allow-Origin": "*",
+        "Authorization": "Bearer " + prefs.getString("token"),
+      },
+    );
+    if(response.statusCode != 200){
+      return false;
+    }
+    return true;
+  }
+
 }
