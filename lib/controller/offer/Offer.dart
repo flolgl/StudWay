@@ -17,7 +17,7 @@ class Offer {
   factory Offer.fromJson(Map<String, dynamic> json) {
     return Offer(
       json['idAnnonce'],
-      json['titre'],
+      json['Titre'],
       json['localisation'],
       json['Description'],
       DateTime.parse(json['datePublication']),
