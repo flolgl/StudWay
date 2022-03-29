@@ -105,7 +105,6 @@ class User {
   /// @throws Exception if the list of conversations is null or empty
   Future<List<Conversation>> getUpdatedConversations () async{
 
-    print("getUpdatedConversations");
     final prefs = await SharedPreferences.getInstance();
 
     final response = await http.get(
@@ -167,6 +166,11 @@ class User {
         'Content-Type': 'application/json; charset=UTF-8',
         "Access-Control-Allow-Origin": "*",
         "Authorization" : "Bearer " + prefs.getString("token"),
+      },
+    ).timeout(
+      const Duration(seconds: 10),
+      onTimeout: () {
+        throw Exception('Impossible de récupérer les données');
       },
     );
 

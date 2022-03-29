@@ -27,7 +27,7 @@ class Conversation{
   
 
   static Future<Conversation> fromJson(Map<String, dynamic> e) async {
-    print(e);
+
     var userA = await User.fetchStrictUserInfo(e["idUtilisateurA"]);
     var userB = await User.fetchStrictUserInfo(e["idUtilisateurB"]);
     var users = [userA, userB];
@@ -35,7 +35,7 @@ class Conversation{
       e['idConversation'],
       e['Libelle'],
       Message(e["Message"], DateTime.parse(e["DateEnvoi"]), e["idUtilisateur"]),
-      DateTime.parse(e['read_at']),
+      DateTime.now(),
       users
     );
   }
