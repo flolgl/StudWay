@@ -56,7 +56,7 @@ class _ProfileState extends State<Profile> {
           Center(
               child: buildButton(
             title: 'Prendre une photo',
-            icon: Icons.image_outlined,
+            icon: Icons.camera_alt_outlined,
             onClicked: () => pickImage(ImageSource.gallery),
           )),
           const SizedBox(
@@ -369,7 +369,6 @@ class _ProfileState extends State<Profile> {
   // TODO : vraiment mettre la photo de profile
   /// Retournant un [CircleAvatar] du user
   Widget _buildCircleAvatar() {
-    print(_user.profilpic);
     var shownImage = image != null ? Image.file(image!) as ImageProvider : NetworkImage(_user.profilpic);
     return CircleAvatar(
       radius: 45,

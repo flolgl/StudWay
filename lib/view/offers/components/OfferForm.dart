@@ -5,13 +5,13 @@ import '../../../controller/offer/Offer.dart';
 import 'AddOfferBody.dart';
 
 class OfferForm extends StatelessWidget{
-  const OfferForm({Key? key}) : super(key: key);
+  final User _user;
+  const OfferForm(this._user, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppBar(),
-      body: const AddOfferBody(),
+      body: AddOfferBody(_user),
     );
   }
 
