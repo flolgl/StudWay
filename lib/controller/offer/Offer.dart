@@ -6,12 +6,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Offer {
   final int _idAnnonce;
-  final String _companyName;
+  final String _titre;
   final String _location;
   final String _description;
   final DateTime _uploadDate;
 
-  Offer(this._idAnnonce, this._companyName, this._location, this._description,
+  Offer(this._idAnnonce, this._titre, this._location, this._description,
       this._uploadDate);
 
   factory Offer.fromJson(Map<String, dynamic> json) {
@@ -26,7 +26,7 @@ class Offer {
 
   int get id => _idAnnonce;
 
-  String get companyName => _companyName;
+  String get titre => _titre;
 
   String get location => _location;
 
