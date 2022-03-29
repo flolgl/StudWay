@@ -84,7 +84,7 @@ class _HomePageState extends State<HomePage> {
           },
         );
       case 1:
-        return const OfferForm();
+        return OfferForm(_user);
       default:
         return _buildProfileScreen();
     }

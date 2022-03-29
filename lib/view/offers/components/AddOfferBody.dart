@@ -1,27 +1,29 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:studway_project/view/AppTheme.dart';
-import '../../../controller/offer/Offer.dart';
 
-class AddOfferBody extends StatefulWidget{
-  const AddOfferBody({Key? key}) : super(key: key);
+import '../../../controller/user/User.dart';
+
+class AddOfferBody extends StatefulWidget {
+  final User _user;
+
+  const AddOfferBody(this._user, {Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => AddOfferBodyState();
-
+  State<StatefulWidget> createState() => AddOfferBodyState(_user);
 }
+
 class AddOfferBodyState extends State<AddOfferBody> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
+  final User _user;
+  String formResponse = "";
 
-
-  AddOfferBodyState();
-
+  AddOfferBodyState(this._user);
 
   @override
   Widget build(BuildContext context) {
@@ -48,23 +50,26 @@ class AddOfferBodyState extends State<AddOfferBody> {
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      border: Border(bottom: BorderSide(color: Colors.grey[200]!)),
+                      border:
+                          Border(bottom: BorderSide(color: Colors.grey[200]!)),
                     ),
                     child: TextFormField(
-                      controller:_titleController,
+                      controller: _titleController,
                       decoration: const InputDecoration(
                         border: InputBorder.none,
                         hintText: "Titre de l'annonce",
                         hintStyle: TextStyle(color: Colors.grey),
                         prefixIcon: Icon(Icons.handyman),
                       ),
-                      validator: (value) => value == null || value.isEmpty ? "Champs vide" : null,
+                      validator: (value) =>
+                          value == null || value.isEmpty ? "Champs vide" : null,
                     ),
                   ),
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      border: Border(bottom: BorderSide(color: Colors.grey[200]!)),
+                      border:
+                          Border(bottom: BorderSide(color: Colors.grey[200]!)),
                     ),
                     child: TextFormField(
                       controller: _descriptionController,
@@ -74,13 +79,15 @@ class AddOfferBodyState extends State<AddOfferBody> {
                         hintStyle: TextStyle(color: Colors.grey),
                         prefixIcon: Icon(Icons.handyman),
                       ),
-                      validator: (value) => value == null || value.isEmpty ? "Champs vide" : null,
+                      validator: (value) =>
+                          value == null || value.isEmpty ? "Champs vide" : null,
                     ),
                   ),
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      border: Border(bottom: BorderSide(color: Colors.grey[200]!)),
+                      border:
+                          Border(bottom: BorderSide(color: Colors.grey[200]!)),
                     ),
                     child: TextFormField(
                       controller: _locationController,
@@ -90,13 +97,16 @@ class AddOfferBodyState extends State<AddOfferBody> {
                         hintStyle: TextStyle(color: Colors.grey),
                         prefixIcon: Icon(Icons.handyman),
                       ),
-                      validator: (value) => value == null || value.isEmpty ? "Champs vide" : null,
+                      validator: (value) =>
+                          value == null || value.isEmpty ? "Champs vide" : null,
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 40,),
+            const SizedBox(
+              height: 40,
+            ),
             ElevatedButton(
               child: const Text(
                 "Ajouter l'annonce",
@@ -111,11 +121,28 @@ class AddOfferBodyState extends State<AddOfferBody> {
               ),
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
-                  Offer.createNewOffer(_titleController.text, _locationController.text, _descriptionController.text);
-                  Navigator.pop(context);
+                  _user.createNewOffer(_titleController.text,
+                      _locationController.text, _descriptionController.text);
+                  _titleController.clear();
+                  _locationController.clear();
+                  _descriptionController.clear();
+                  setState(() {
+                    formResponse = "Annonce publiée avec succès";
+                  });
                 }
               },
-
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            RichText(
+              text: TextSpan(
+                text: formResponse,
+                style: const TextStyle(
+                  fontSize: 18,
+                  color: Colors.green,
+                ),
+              ),
             ),
           ],
         ),
