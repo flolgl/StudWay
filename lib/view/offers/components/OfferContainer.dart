@@ -141,7 +141,7 @@ class _OfferContainerState extends State<OfferContainer> {
               return const Text(
                   'Impossible de récupérer vos données. Veuillez réessayer plus tard.');
             }
-            return const CircularProgressIndicator();
+            return const Center();
           },
         ),
       ),

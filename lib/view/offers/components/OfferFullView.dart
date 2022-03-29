@@ -32,24 +32,129 @@ class _OfferFullViewState extends State<OfferFullView> {
   }
 
   Widget _buildAppBody() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(15, 15, 15, 7),
-          child: RichText(
-            textAlign: TextAlign.center,
-            text: TextSpan(
-              text: _offer.titre,
-              style: const TextStyle(
-                fontSize: 22,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
+    return Center(
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(15, 15, 15, 7),
+            child: RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                text: _offer.titre,
+                style: const TextStyle(
+                  fontSize: 30,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
-        ),
-      ],
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 15, 15, 7),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.room,
+                  color: Colors.grey,
+                ),
+                RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    text: _offer.location,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              constraints: const BoxConstraints(
+                maxHeight: double.infinity,
+                minHeight: 400,
+                minWidth: 600,
+              ),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(
+                  color: Colors.grey,
+                ),
+                borderRadius: BorderRadius.circular(8.0),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: -7,
+                    blurRadius: 15,
+                    offset: const Offset(0, 10), // changes position of shadow
+                  ),
+                ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  left: 15,
+                  top: 15,
+                  bottom: 15,
+                  right: 15,
+                ),
+                child: RichText(
+                  text: TextSpan(
+                    text: _offer.description,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      color: Colors.black,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 15, 15, 7),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.access_time,
+                  color: Colors.grey,
+                ),
+                RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    text: " " + _offer.timeSinceUploadInDays(),
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                fixedSize: const Size(240, 35),
+                primary: Colors.blue,
+                onPrimary: Colors.white,
+                textStyle: const TextStyle(fontSize: 15)),
+            child: Row(
+              children: const [
+                Icon(Icons.schedule_send_outlined, size: 28),
+                SizedBox(width: 16),
+                Text("Postuler maintenant"),
+              ],
+            ),
+            onPressed: () {
+              print("clicked!");
+            },
+          ),
+        ],
+      ),
     );
   }
 
