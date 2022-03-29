@@ -18,19 +18,20 @@ class User {
   final String _email;
   final String _description;
   final String _cvFile;
+  final String _type;
   late IO.Socket _socket;
 
   List<Conversation>? _conversations;
 
   User(this._id, this._nbMsg, this._prenom, this._nom, this._email,
-      this._description, this._cvFile) {
+      this._description, this._cvFile, this._type) {
     connectUserToSocket();
     getUpdatedConversations();
     currentUser = this;
   }
 
   User.strict(this._id, this._nbMsg, this._prenom, this._nom, this._email,
-      this._description, this._cvFile);
+      this._description, this._cvFile, this._type);
 
   factory User.fromJson(Map<String, dynamic> json) {
     //print(json);
@@ -42,6 +43,7 @@ class User {
       json['Email'],
       json['Description'],
       json['CVFile'],
+      json['Type'],
     );
   }
 
@@ -52,6 +54,7 @@ class User {
       -1,
       json['Nom'] == null ? "" : json['Nom'],
       json['Prenom'] == null ? "" : json['Prenom'],
+      "",
       "",
       "",
       "",
@@ -73,6 +76,8 @@ class User {
   String get profilpic => "http://localhost:3000/users/photoprofile/$_id";
 
   String get cvfile => _cvFile;
+
+  String get type => _type;
 
   List<Conversation>? get conversations => _conversations;
 

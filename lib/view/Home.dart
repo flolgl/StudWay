@@ -4,6 +4,7 @@ import 'package:studway_project/view/offers/components/OfferForm.dart';
 
 import '../controller/offer/Offer.dart';
 import '../controller/user/User.dart';
+import 'Home/Business/CandidatFavList.dart';
 import 'Home/Profile/Profile.dart';
 import 'chat/ChatList.dart';
 import 'icons/my_flutter_app_icons.dart';
@@ -84,7 +85,7 @@ class _HomePageState extends State<HomePage> {
           },
         );
       case 1:
-        return OfferForm(_user);
+        return _user.type == "Entreprise" ? OfferForm(_user) : const CandidatFavList();
       default:
         return _buildProfileScreen();
     }
@@ -116,7 +117,7 @@ class _HomePageState extends State<HomePage> {
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.account_circle_outlined),
-          label: 'School',
+          label: 'Moi',
         ),
       ],
       currentIndex: _selectedIndex,

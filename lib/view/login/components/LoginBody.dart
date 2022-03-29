@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:studway_project/view/AppTheme.dart';
+import 'package:studway_project/view/login/Register.dart';
 import '../../Home.dart';
 import '../../icons/social_sign_in_icons_icons.dart';
 import '../components/PasswordInput.dart';
@@ -18,7 +19,8 @@ class LoginForm extends StatefulWidget {
 class LoginBody extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
   final TextInput emailInput = TextInput(text: "Adresse mail");
-  final PasswordInput passwordInput = PasswordInput(text: "Mot de passe");
+  final PasswordInput passwordInput = PasswordInput(text: "Mot de passe", isRegister: false,);
+  String _formErrors = "";
 
   /// Méthode permettant la construction du form Login
   @override
@@ -124,14 +126,19 @@ class LoginBody extends State<LoginForm> {
             ),
           ),
           const SizedBox(height: 40),
-          Center(child: _buildHrefText(context, "Mot de passe oublié ?")),
-          const SizedBox(height: 40),
+          Center(child: _buildHrefText(context, "Mot de passe oublié ?", true)),
+          const SizedBox(height: 20),
+          Text(_formErrors != "" ? _formErrors : "",
+            style: const TextStyle(color: Colors.red, fontSize: 12),
+          ),
+          SizedBox(height: _formErrors == "" ? 0 : 20),
           Center(
               child: _buildSubmitButton(
                   "Se connecter", AppTheme.normalBlue, context)),
           const SizedBox(height: 40),
           Center(
-              child: _buildHrefText(context, "Pas de compte ? S'enregistrer")),
+              child: _buildHrefText(context, "Pas de compte ? S'enregistrer", false)
+          ),
           const SizedBox(height: 40),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -171,6 +178,10 @@ class LoginBody extends State<LoginForm> {
         if (_formKey.currentState!.validate()) {
           if (await LoginAuth.connect(emailInput.getInputText(), passwordInput.getInputText())) {
             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomePage()));
+          }else{
+            setState(() {
+              _formErrors = "Adresse mail ou mot de passe non reconnu";
+            });
           }
         }
       },
@@ -189,7 +200,7 @@ class LoginBody extends State<LoginForm> {
   }
 
   /// Méthode retournant un text comme un href en html
-  Widget _buildHrefText(BuildContext context, String text) {
+  Widget _buildHrefText(BuildContext context, String text, bool mdpOublie) {
     // TODO : Hover color + diriger vers mot de passe oublié
     TextStyle linkStyle = TextStyle(color: AppTheme.normalBlue);
     //TextStyle hoverStyle = const TextStyle(color: Color(0xff1d2b43));
@@ -199,7 +210,7 @@ class LoginBody extends State<LoginForm> {
         text: text,
         recognizer: TapGestureRecognizer()
           ..onTap = () {
-            print(text);
+            mdpOublie ? null : Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Register()));
           },
       ),
     );

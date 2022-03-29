@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 
 class PasswordInput extends StatelessWidget {
   final String text;
+  final bool isRegister;
   String _inputText = '';
 
-  PasswordInput({Key? key, required this.text}) : super(key: key);
+  PasswordInput({Key? key, required this.text, required this.isRegister}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,7 @@ class PasswordInput extends StatelessWidget {
       autocorrect: false,
       validator: (input) {
         if (input == null || input.isEmpty || input.length < 10) {
-          return "Merci de choisir un mot de passe plus difficile";
+          return isRegister ? "Merci de choisir un mot de passe plus difficile" : "Merci de saisir votre mot de passe";
         }
         _inputText = input;
         return null;
