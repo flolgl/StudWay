@@ -113,23 +113,4 @@ class Offer {
       throw Exception('caught http error');
     }
   }
-
-  static void createNewOffer(String jobTitle, String location, String description/*, Image image*/) async {
-    final prefs = await SharedPreferences.getInstance();
-    http.post(
-      Uri.parse("http://localhost:3000/annonce/create"),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        "Access-Control-Allow-Origin": "*",
-        "Authorization": "Bearer " + prefs.getString("token"),
-      },
-      body: jsonEncode(
-        <String, String>{
-          'titre': jobTitle,
-          'location': location,
-          'Description': description,
-        },
-      ),
-    );
-  }
 }
