@@ -65,9 +65,24 @@ class DataSearch extends SearchDelegate<String> {
     for (int offerIndex in offerIndexList) {
       offerListAsWidget.add(OfferContainer(offerIndex));
     }
-    return ListView(
-      children: offerListAsWidget,
-    );
+    if(offerListAsWidget.isEmpty){
+      return Center(
+        child: RichText(
+          textAlign: TextAlign.center,
+          text: const TextSpan(
+            text: "Aucun résultat ne correspond à votre recherche",
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey,
+            ),
+          ),
+        ),
+      );
+    } else {
+      return ListView(
+        children: offerListAsWidget,
+      );
+    }
   }
 
   @override
