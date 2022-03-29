@@ -492,7 +492,7 @@ Widget buildButton({
       margin: const EdgeInsets.only(top: 20.0),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-            fixedSize: const Size(240, 35),
+            fixedSize: const Size(260, 35),
             primary: Colors.white,
             onPrimary: Colors.black,
             textStyle: const TextStyle(fontSize: 15)),

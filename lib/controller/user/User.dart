@@ -379,4 +379,7 @@ class User {
     return true;
   }
 
+  
+  void applyTo(Offer offer) {}
+
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../controller/offer/Offer.dart';
+import '../../../controller/user/User.dart';
 import 'OfferFullView.dart';
 
 class OfferContainer extends StatefulWidget {
@@ -40,7 +41,7 @@ class _OfferContainerState extends State<OfferContainer> {
               return GestureDetector(
                 onTap: () {
                   Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (context) => OfferFullView(snapshot.data!)));
+                      .push(MaterialPageRoute(builder: (context) => OfferFullView(User.currentUser!, snapshot.data!)));
                 },
                 child: Container(
                   height: 250,
