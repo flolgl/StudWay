@@ -14,7 +14,8 @@ class EntrepriseBusinessList extends StatefulWidget {
 class _EntrepriseBusinessListState extends State<EntrepriseBusinessList> {
   late List<Offer> _annoncesList;
   late List<List<Candidature>> _candidaturesList;
-  late List<bool> _areCandidaturesShowed;
+  late List<bool> _areNonRefusedCandidaturesShowed;
+  late List<bool> _areAllCandidaturesShowed;
   bool _isFetched = false;
 
   @override
@@ -58,26 +59,27 @@ class _EntrepriseBusinessListState extends State<EntrepriseBusinessList> {
     setState(() {
       _annoncesList = annoncesList;
       _candidaturesList = List.filled(annoncesList.length, <Candidature>[]);
-      _areCandidaturesShowed = List.filled(annoncesList.length, false);
+      _areNonRefusedCandidaturesShowed = List.filled(annoncesList.length, false);
+      _areAllCandidaturesShowed = List.filled(annoncesList.length, false);
       _isFetched = true;
     });
   }
 
   // TODO : delete les candidatures
-  void deleteFav(int id) async {
-    // var deleted = await Candidature.deleteCandidature(id);
-    // if (!deleted){
-    //   ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    // }else{
-    //   setState(() {
-    //     _annoncesList.removeWhere((element) => element.id == id);
-    //   });
-    // }
+  void _deleteAnnonce(int id) async {
+    var deleted = await Offer.deleteUserOffer(id);
+    if (!deleted){
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }else{
+      setState(() {
+        _annoncesList.removeWhere((element) => element.id == id);
+      });
+    }
   }
 
 
   final snackBar = SnackBar(
-    content: const Text('Erreur lors de la suppression'),
+    content: const Text('Il est pour le moment impossible de supprimer une annonce'),
     action: SnackBarAction(
       label: 'Ok',
       onPressed: () {
@@ -105,6 +107,7 @@ class _EntrepriseBusinessListState extends State<EntrepriseBusinessList> {
     );
   }
 
+
   Widget _buildFavListView(){
     if (_annoncesList.isEmpty) {
       return const Center(
@@ -117,37 +120,66 @@ class _EntrepriseBusinessListState extends State<EntrepriseBusinessList> {
         return Card(
           child: Column(
             children: [
-              GestureDetector(
-                onTap: () async {
-                  var candidatures = await Candidature.fetchCandidaturesOfOffer(_annoncesList[index]);
-                  setState(() {
-                    if (candidatures.isNotEmpty){
-                      _candidaturesList[index] = candidatures;
-                    }
-                    _areCandidaturesShowed[index] = !_areCandidaturesShowed[index];
-                  });
-                  //Navigator.pushNamed(context, '/annonce', arguments: _annoncesList[index]);
-                },
-                child: ListTile(
-                  title: Text(_annoncesList[index].titre),
-                  subtitle: Text(_annoncesList[index].description),
-                  leading: const Icon(Icons.list),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: () {
-                      deleteFav(_annoncesList[index].id);
-                    },
-                  ),
+              ListTile(
+                title: Text(_annoncesList[index].titre),
+                subtitle: Text(_annoncesList[index].description),
+                leading: const Icon(Icons.list),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Tooltip(
+                      message: "Voir les candidatures non lues ou acceptées",
+                      child: IconButton(
+                        icon: const Icon(Icons.check_circle_outline_outlined),
+                        onPressed: () async {
+                          if(_areNonRefusedCandidaturesShowed[index] == true) {
+                            setState(() {
+                              _areNonRefusedCandidaturesShowed[index] = false;
+                            });
+                          }
+
+                          var candidatures = await Candidature.fetchCandidaturesNotRefusedOfOffer(_annoncesList[index]);
+                          setState(() {
+                            _candidaturesList[index] = candidatures;
+                            _areAllCandidaturesShowed[index] = !_areAllCandidaturesShowed[index];
+                          });
+                        },
+                      ),
+                    ),
+                    Tooltip(
+                      message: "Voir toutes les candidatures",
+                      child: IconButton(
+                        icon: const Icon(Icons.expand_more_outlined),
+                        onPressed: () async {
+                          if(_areAllCandidaturesShowed[index] == true) {
+                            setState(() {
+                              _areAllCandidaturesShowed[index] = false;
+                            });
+                          }
+
+                          var candidatures = await Candidature.fetchAllCandidaturesOfOffer(_annoncesList[index]);
+                          setState(() {
+                            _candidaturesList[index] = candidatures;
+                            _areNonRefusedCandidaturesShowed[index] = !_areNonRefusedCandidaturesShowed[index];
+                          });
+                        },
+                      ),
+                    ),
+                    Tooltip(
+                      message: "Supprimer l'annonce",
+                      child: IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () {
+                          _deleteAnnonce(_annoncesList[index].id);
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Container(
-                child: !_areCandidaturesShowed[index]
-                    ? const Center(
-                        child: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text("Afficher les candidatures"),
-                        ),
-                      )
+                child: !_areNonRefusedCandidaturesShowed[index] && !_areAllCandidaturesShowed[index]
+                    ? null
                     : Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: ListView.builder(
@@ -169,11 +201,35 @@ class _EntrepriseBusinessListState extends State<EntrepriseBusinessList> {
                                     leading: CircleAvatar(
                                       backgroundImage: NetworkImage("http://localhost:3000/users/photoprofile/${_candidaturesList[index][indice].idCandidat}"),
                                     ),
-                                    trailing: IconButton(
-                                      icon: const Icon(Icons.delete),
-                                      onPressed: () {
-                                        deleteFav(_candidaturesList[index][indice].idCandidat);
-                                      },
+                                    trailing: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        IconButton(
+                                          icon: const Icon(Icons.done_outlined),
+                                          disabledColor: Colors.green,
+                                          onPressed: _candidaturesList[index][indice].retenue == 1 ? null : () async{
+
+                                            if (await _candidaturesList[index][indice].setRetenueState(1)){
+                                              setState(() {
+                                                _candidaturesList[index][indice].retenue = 1;
+                                              });
+                                            }
+                                          },
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(Icons.clear),
+                                          disabledColor: Colors.red,
+                                          onPressed: _candidaturesList[index][indice].retenue == 0 ? null : () async{
+
+                                            if (await _candidaturesList[index][indice].setRetenueState(0)){
+                                              setState(() {
+                                                // remove candidature
+                                                _candidaturesList[index].removeAt(indice);
+                                              });
+                                            }
+                                          },
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 );
