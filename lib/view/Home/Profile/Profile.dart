@@ -24,8 +24,30 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   File? image;
   final User _user;
+  late final int _userFavOffersCount;
+  late final int _userCandidatureCount;
+  late final int _userAcceptedCandidaturesCount;
+  bool _isFetching = true;
 
   _ProfileState(this._user);
+
+  @override
+  void initState() {
+    super.initState();
+    _getData();
+  }
+
+  _getData() async {
+    var userFav = await _user.fetchCandidatFav();
+    var userCandidatures = await _user.fetchCandidature();
+    var userAcceptedCandidatures = userCandidatures.where((candidature) => candidature.retenue == 1).toList();
+    setState(() {
+      _userFavOffersCount = userFav.length;
+      _userCandidatureCount = userCandidatures.length;
+      _userAcceptedCandidaturesCount = userAcceptedCandidatures.length;
+      _isFetching = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +79,7 @@ class _ProfileState extends State<Profile> {
               child: buildButton(
             title: 'Prendre une photo',
             icon: Icons.camera_alt_outlined,
-            onClicked: () => pickImage(ImageSource.gallery),
+            onClicked: () => pickImage(ImageSource.camera),
           )),
           const SizedBox(
             height: 30,
@@ -387,23 +409,25 @@ class _ProfileState extends State<Profile> {
               ),
             ),
             child: Column(
-              children: const [
-                SizedBox(
+              children: [
+                const SizedBox(
                   height: 10,
                 ),
-                Text(
-                  "Applied",
+                const Text(
+                  "Nombre de candidatures",
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.black45,
                       fontSize: 14),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Text(
-                  "23",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                  _isFetching
+                      ? "Chargement..."
+                      : _userCandidatureCount.toString(),
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                 ),
               ],
             ),
@@ -417,23 +441,23 @@ class _ProfileState extends State<Profile> {
               ),
             ),
             child: Column(
-              children: const [
-                SizedBox(
+              children: [
+                const SizedBox(
                   height: 10,
                 ),
-                Text(
-                  "Applied",
+                const Text(
+                  "Nombre de favoris",
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.black45,
                       fontSize: 14),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Text(
-                  "23",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                  _isFetching ? "Chargement..." : _userFavOffersCount.toString(),
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                 ),
               ],
             ),
@@ -442,23 +466,23 @@ class _ProfileState extends State<Profile> {
         Expanded(
           child: Container(
             child: Column(
-              children: const [
-                SizedBox(
+              children:  [
+                const SizedBox(
                   height: 10,
                 ),
-                Text(
-                  "Applied",
+                const Text(
+                  "Nombre de candidatures retenues",
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.black45,
                       fontSize: 14),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Text(
-                  "23",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                  _isFetching ? "Chargement..." : _userAcceptedCandidaturesCount.toString(),
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                 ),
               ],
             ),
@@ -468,17 +492,14 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  void _navigateToProfileForm(BuildContext context) {
-    ;
-  }
 
   Future pickImage(ImageSource source) async {
     try {
       final image = await ImagePicker.pickImage(source: ImageSource.camera);
       final imageTemporary = File(image.path);
       setState(() => this.image = imageTemporary);
-    } on PlatformException catch (e) {
-      throw Exception(e.toString());
+    } catch (e) {
+      _buildErrorPopUp(context);
     }
   }
 }

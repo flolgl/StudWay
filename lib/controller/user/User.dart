@@ -298,6 +298,7 @@ class User {
     }
   }
 
+  /// Return user's offers fav list
   Future<List<Offer>> fetchCandidatFav() async{
     final prefs = await SharedPreferences.getInstance();
     return http.get(
