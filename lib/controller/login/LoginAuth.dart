@@ -4,27 +4,27 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginAuth {
-  static Future<bool> register(String email, String password) async {
-    final prefs = await SharedPreferences.getInstance();
+  static Future<bool> register(String firstName, String lastName, int typeIndex,
+      String email, String password, String description) async {
+    String type = typeIndex == 1 ? "Candidat" : "Entreprise";
     try {
-      print("TEST");
       var response = await http.post(
         Uri.parse('http://localhost:3000/register'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           "Access-Control-Allow-Origin": "*",
-          "Authorization": "Bearer " + prefs.getString("token"),
         },
         body: jsonEncode(
           <String, String>{
-            'Email': email,
-            'Password': password,
-            'Nom': 'nom',
-            'Prenom': 'prenom',
-            'Description': 'NULL',
+            'email': email,
+            'password': password,
+            'nom': lastName,
+            'prenom': firstName,
+            'description': description,
           },
         ),
       );
+      print(firstName + " " + lastName + " " + type + " " + email + " " + password + " " + description);
       return response.statusCode == 201;
     } catch (e) {
       print(e.toString());

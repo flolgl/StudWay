@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 class TextInput extends StatelessWidget {
   final String text;
   String _inputText = '';
+  bool emailValidator = false;
 
-  TextInput({Key? key, required this.text}) : super(key: key);
+  TextInput({Key? key, required this.text, required this.emailValidator}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +19,13 @@ class TextInput extends StatelessWidget {
         prefixIcon: const Icon(Icons.person_outlined),
       ),
       validator: (input) {
-        if (input == null || input.isEmpty || !EmailValidator.validate(input))
-          return "Merci de rentrer une email valide";
-        _inputText = input;
+        if(emailValidator) {
+          if (input == null || input.isEmpty || !EmailValidator.validate(input))
+            return "Merci de rentrer une email valide";
+        }
+        if(input != null) {
+          _inputText = input;
+        }
         return null;
       },
       cursorColor: const Color(0xff4f6d9c),

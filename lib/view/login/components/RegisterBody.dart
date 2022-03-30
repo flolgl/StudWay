@@ -1,11 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+
+import './TextInput.dart';
 import '../../../controller/login/LoginAuth.dart';
 import '../../AppTheme.dart';
 import '../../icons/social_sign_in_icons_icons.dart';
 import '../Login.dart';
-import './TextInput.dart';
-
 import 'DoubleConfirmPwInput.dart';
 
 class RegisterForm extends StatefulWidget {
@@ -15,10 +15,32 @@ class RegisterForm extends StatefulWidget {
   RegisterBody createState() => RegisterBody();
 }
 
+enum UserType { company, candidate }
+
 class RegisterBody extends State<RegisterForm> {
   final _formKey = GlobalKey<FormState>();
-  final emailInput = TextInput(text: "Adresse mail");
+  UserType? _currentType = UserType.candidate;
+
+  final firstNameInput = TextInput(
+    text: "Prénom",
+    emailValidator: false,
+  );
+
+  final lastNameInput = TextInput(
+    text: "Nom",
+    emailValidator: false,
+  );
+
+  final emailInput = TextInput(
+    text: "Adresse mail",
+    emailValidator: true,
+  );
   final pwInput = DoubleConfirmPwInput(text: "Mot de passe");
+  final descriptionInput = TextInput(
+    text: "Description",
+    emailValidator: false,
+  );
+  bool visibility = true;
 
   @override
   Widget build(BuildContext context) {
@@ -83,58 +105,122 @@ class RegisterBody extends State<RegisterForm> {
   }
 
   Widget _buildColumnForm(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        children: <Widget>[
-          const SizedBox(
-            height: 60,
+    return Column(
+      children: <Widget>[
+        ListTile(
+          title: const Text('Entreprise'),
+          leading: Radio<UserType>(
+            activeColor: AppTheme.normalBlue,
+            value: UserType.company,
+            groupValue: _currentType,
+            onChanged: (UserType? value) {
+              setState(
+                () {
+                  _currentType = value;
+                  visibility = false;
+                },
+              );
+            },
           ),
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: const [
-                BoxShadow(
-                  color: Color.fromRGBO(39, 58, 105, 3),
-                  blurRadius: 20,
-                  offset: Offset(0, 10),
-                )
-              ],
-            ),
-            child: Column(
-              children: <Widget>[
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    border:
-                        Border(bottom: BorderSide(color: Colors.grey[200]!)),
-                  ),
-                  child: emailInput,
+        ),
+        ListTile(
+          title: const Text('Candidat'),
+          leading: Radio<UserType>(
+            activeColor: AppTheme.normalBlue,
+            value: UserType.candidate,
+            groupValue: _currentType,
+            onChanged: (UserType? value) {
+              setState(() {
+                _currentType = value;
+                visibility = true;
+              });
+            },
+          ),
+        ),
+        Form(
+          key: _formKey,
+          child: Column(
+            children: <Widget>[
+              const SizedBox(
+                height: 60,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color.fromRGBO(39, 58, 105, 3),
+                      blurRadius: 20,
+                      offset: Offset(0, 10),
+                    )
+                  ],
                 ),
-                pwInput,
-              ],
-            ),
-          ),
-          const SizedBox(height: 40),
-          Align(
-              alignment: Alignment.topRight,
-              child: _buildElevatedButton(AppTheme.normalBlue, context)),
-          const SizedBox(height: 20),
-          Center(
-              child: _hyperLinkBuild(
-                  context, "Vous avez déjà un compte ? Se connecter")),
-          const SizedBox(height: 30),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              createSocialButton(SocialSignInIcons.github),
-              createSocialButton(SocialSignInIcons.linkedin_in),
-              createSocialButton(SocialSignInIcons.apple),
+                child: Column(
+                  children: <Widget>[
+                    Visibility(
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          border: Border(
+                              bottom: BorderSide(color: Colors.grey[200]!)),
+                        ),
+                        child: firstNameInput,
+                      ),
+                      visible: visibility,
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(color: Colors.grey[200]!)),
+                      ),
+                      child: lastNameInput,
+                    ),
+                    Visibility(
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          border: Border(
+                              bottom: BorderSide(color: Colors.grey[200]!)),
+                        ),
+                        child: descriptionInput,
+                      ),
+                      visible: visibility,
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(color: Colors.grey[200]!)),
+                      ),
+                      child: emailInput,
+                    ),
+                    pwInput,
+                  ],
+                ),
+              ),
+              const SizedBox(height: 40),
+              Align(
+                  alignment: Alignment.topRight,
+                  child: _buildElevatedButton(AppTheme.normalBlue, context)),
+              const SizedBox(height: 20),
+              Center(
+                  child: _hyperLinkBuild(
+                      context, "Vous avez déjà un compte ? Se connecter")),
+              const SizedBox(height: 30),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  createSocialButton(SocialSignInIcons.github),
+                  createSocialButton(SocialSignInIcons.linkedin_in),
+                  createSocialButton(SocialSignInIcons.apple),
+                ],
+              ),
             ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -156,8 +242,16 @@ class RegisterBody extends State<RegisterForm> {
   ElevatedButton _buildElevatedButton(Color color, BuildContext context) {
     return ElevatedButton(
       onPressed: () async {
-        if (_formKey.currentState!.validate() && await LoginAuth.register(emailInput.getInputText(), pwInput.getPassword())) {
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Login()));
+        if (_formKey.currentState!.validate() &&
+            await LoginAuth.register(
+                firstNameInput.getInputText(),
+                lastNameInput.getInputText(),
+                _currentType!.index,
+                emailInput.getInputText(),
+                pwInput.getPassword(),
+                descriptionInput.getInputText())) {
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => const Login()));
         }
       },
       child: const Icon(Icons.arrow_forward),
@@ -181,7 +275,8 @@ class RegisterBody extends State<RegisterForm> {
         text: text,
         recognizer: TapGestureRecognizer()
           ..onTap = () {
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Login()));
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => const Login()));
           },
       ),
     );

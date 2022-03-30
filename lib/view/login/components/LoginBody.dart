@@ -2,12 +2,12 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:studway_project/view/AppTheme.dart';
 import 'package:studway_project/view/login/Register.dart';
+
+import '../../../controller/login/LoginAuth.dart';
 import '../../Home.dart';
 import '../../icons/social_sign_in_icons_icons.dart';
 import '../components/PasswordInput.dart';
 import '../components/TextInput.dart';
-
-import '../../../controller/login/LoginAuth.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({Key? key}) : super(key: key);
@@ -18,8 +18,11 @@ class LoginForm extends StatefulWidget {
 
 class LoginBody extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
-  final TextInput emailInput = TextInput(text: "Adresse mail");
-  final PasswordInput passwordInput = PasswordInput(text: "Mot de passe", isRegister: false,);
+  final TextInput emailInput = TextInput(text: "Adresse mail", emailValidator: true);
+  final PasswordInput passwordInput = PasswordInput(
+    text: "Mot de passe",
+    isRegister: false,
+  );
   String _formErrors = "";
 
   /// Méthode permettant la construction du form Login
@@ -46,11 +49,11 @@ class LoginBody extends State<LoginForm> {
           Expanded(
             child: Container(
               decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(60),
-                      topRight: Radius.circular(60),
-                  ),
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(60),
+                  topRight: Radius.circular(60),
+                ),
               ),
               child: SingleChildScrollView(
                 child: Padding(
@@ -114,7 +117,8 @@ class LoginBody extends State<LoginForm> {
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    border: Border(bottom: BorderSide(color: Colors.grey[200]!)),
+                    border:
+                        Border(bottom: BorderSide(color: Colors.grey[200]!)),
                   ),
                   child: emailInput,
                 ),
@@ -128,7 +132,8 @@ class LoginBody extends State<LoginForm> {
           const SizedBox(height: 40),
           Center(child: _buildHrefText(context, "Mot de passe oublié ?", true)),
           const SizedBox(height: 20),
-          Text(_formErrors != "" ? _formErrors : "",
+          Text(
+            _formErrors != "" ? _formErrors : "",
             style: const TextStyle(color: Colors.red, fontSize: 12),
           ),
           SizedBox(height: _formErrors == "" ? 0 : 20),
@@ -137,8 +142,8 @@ class LoginBody extends State<LoginForm> {
                   "Se connecter", AppTheme.normalBlue, context)),
           const SizedBox(height: 40),
           Center(
-              child: _buildHrefText(context, "Pas de compte ? S'enregistrer", false)
-          ),
+              child: _buildHrefText(
+                  context, "Pas de compte ? S'enregistrer", false)),
           const SizedBox(height: 40),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -170,15 +175,18 @@ class LoginBody extends State<LoginForm> {
   }
 
   /// Méthode retournant le bouton de submit
-  ElevatedButton _buildSubmitButton(String text, Color color, BuildContext context) {
+  ElevatedButton _buildSubmitButton(
+      String text, Color color, BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
     return ElevatedButton(
       onPressed: () async {
         if (_formKey.currentState!.validate()) {
-          if (await LoginAuth.connect(emailInput.getInputText(), passwordInput.getInputText())) {
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomePage()));
-          }else{
+          if (await LoginAuth.connect(
+              emailInput.getInputText(), passwordInput.getInputText())) {
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => const HomePage()));
+          } else {
             setState(() {
               _formErrors = "Adresse mail ou mot de passe non reconnu";
             });
@@ -210,7 +218,10 @@ class LoginBody extends State<LoginForm> {
         text: text,
         recognizer: TapGestureRecognizer()
           ..onTap = () {
-            mdpOublie ? null : Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Register()));
+            mdpOublie
+                ? null
+                : Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => const Register()));
           },
       ),
     );
