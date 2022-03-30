@@ -11,9 +11,10 @@ class Offer {
   final String _description;
   final DateTime _uploadDate;
   final int _userId;
+  final String _lien;
 
   Offer(this._idAnnonce, this._titre, this._location, this._description,
-      this._uploadDate, this._userId);
+      this._uploadDate, this._userId, this._lien);
 
   factory Offer.fromJson(Map<String, dynamic> json) {
     return Offer(
@@ -23,12 +24,15 @@ class Offer {
       json['Description'],
       DateTime.parse(json['datePublication']),
       json['idEntreprise'],
+      json['lien'],
     );
   }
 
   int get id => _idAnnonce;
 
   String get titre => _titre;
+
+  String get lien => _lien;
 
   String get location => _location;
 

@@ -15,7 +15,7 @@ class Candidature {
     return Candidature(
       json['idCandidature'],
       json['LettreMotivation'],
-      Offer(json['idAnnonce'], json["titre"], json["localisation"], json["Description"], DateTime.parse(json["datePublication"]), json['idEntreprise']),
+      Offer(json['idAnnonce'], json["titre"], json["localisation"], json["Description"], DateTime.parse(json["datePublication"]), json['idEntreprise'], json["lien"]),
       json["idCandidat"],
       json["retenue"],
     );
@@ -57,7 +57,7 @@ class Candidature {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Access-Control-Allow-Origin": "*",
-        "Authorization": "Bearer " + prefs.getString("token"),
+        "Authorization": "Bearer " + prefs.getString("token")!,
       },
     );
 
