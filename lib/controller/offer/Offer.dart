@@ -17,6 +17,7 @@ class Offer {
       this._uploadDate, this._userId, this._lien);
 
   factory Offer.fromJson(Map<String, dynamic> json) {
+    print(json);
     return Offer(
       json['idAnnonce'],
       json['titre'],
@@ -131,7 +132,7 @@ class Offer {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Access-Control-Allow-Origin": "*",
-        "Authorization": "Bearer " + prefs.getString("token"),
+        "Authorization": "Bearer " + prefs.getString("token")!,
       },
     );
 
@@ -158,7 +159,7 @@ class Offer {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Access-Control-Allow-Origin": "*",
-        "Authorization": "Bearer " + prefs.getString("token"),
+        "Authorization": "Bearer " + prefs.getString("token")!,
       },
     );
 

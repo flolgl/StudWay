@@ -800,8 +800,9 @@ class _ProfileState extends State<Profile> {
 
   Future pickImage(ImageSource source) async {
     try {
-      final image = await ImagePicker.pickImage(source: ImageSource.camera);
-      final imageTemporary = File(image.path);
+      final ImagePicker _picker = ImagePicker();
+      final image = await _picker.pickImage(source: ImageSource.camera);
+      final imageTemporary = File(image!.path);
       setState(() => this.image = imageTemporary);
     } catch (e) {
       _buildErrorPopUp(context, 'Impossible sur navigateur internet');

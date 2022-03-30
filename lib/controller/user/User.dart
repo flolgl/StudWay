@@ -36,17 +36,18 @@ class User {
       this._description, this._cvFile, this._type);
 
   factory User.fromJson(Map<String, dynamic> json) {
-    //print(json);
     return User(
       json['idUtilisateur'],
       json['nbMsg'],
-      json['Nom'],
-      json['Prenom'],
-      json['Email'],
-      json['Description'],
-      json['CVFile'],
+      json['prenom'] ?? '',
+      json['nom'],
+      json['email'],
+      json['Description'] ?? '',
+      json['CVFile'] ?? '',
       json['Type'],
     );
+
+
   }
 
   factory User.strictFromJson(Map<String, dynamic> json) {
@@ -54,8 +55,8 @@ class User {
     return User.strict(
       json['idUtilisateur'],
       -1,
-      json['Nom'] == null ? "" : json['Nom'],
-      json['Prenom'] == null ? "" : json['Prenom'],
+      json['Prenom'] ?? "",
+      json['Nom'] ?? "",
       "",
       "",
       "",
@@ -108,14 +109,14 @@ class User {
 
     final response = await http.get(
       Uri.parse('http://localhost:3000/conversation/utilisateur/' +
-          prefs.getString('id')),
+          prefs.getString('id')!),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Access-Control-Allow-Origin": "*",
-        "Authorization": "Bearer " + prefs.getString("token"),
+        "Authorization": "Bearer " + prefs.getString("token")!,
       },
     );
-    print(response.body);
+    // print(response.body);
     if (response.statusCode == 200) {
       return await Conversation.fromJsonList(json.decode(response.body));
     } else {
@@ -134,7 +135,7 @@ class User {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Access-Control-Allow-Origin": "*",
-        "Authorization": "Bearer " + prefs.getString("token"),
+        "Authorization": "Bearer " + prefs.getString("token")!,
       },
     );
 
@@ -155,11 +156,11 @@ class User {
   static Future<User> fetchUserInfo() async {
     final prefs = await SharedPreferences.getInstance();
     final response = await http.get(
-      Uri.parse('http://localhost:3000/users/' + prefs.getString('id')),
+      Uri.parse('http://localhost:3000/users/' + prefs.getString('id')!),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Access-Control-Allow-Origin": "*",
-        "Authorization": "Bearer " + prefs.getString("token"),
+        "Authorization": "Bearer " + prefs.getString("token")!,
       },
     ).timeout(
       const Duration(seconds: 10),
@@ -173,6 +174,7 @@ class User {
       // then parse the JSON.
       return User.fromJson(jsonDecode(response.body));
     } else {
+      print("erreur");
       // If the server did not return a 200 OK response,
       // then throw an exception.
       throw Exception('Impossible de récupérer les données');
@@ -189,7 +191,7 @@ class User {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Access-Control-Allow-Origin": "*",
-        "Authorization": "Bearer " + prefs.getString("token"),
+        "Authorization": "Bearer " + prefs.getString("token")!,
       },
       body: jsonEncode(<String, String>{'competence': competence}),
     );
@@ -205,7 +207,7 @@ class User {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Access-Control-Allow-Origin": "*",
-        "Authorization": "Bearer " + prefs.getString("token"),
+        "Authorization": "Bearer " + prefs.getString("token")!,
       },
       body: jsonEncode(<String, String>{'Description': description}),
     );
@@ -219,7 +221,7 @@ class User {
       allowedExtensions: ['pdf'],
     );
     if (result != null) {
-      File file = File(result.files.single.path);
+      File file = File(result.files.single.path!);
 
       var stream = http.ByteStream(DelegatingStream.typed(file.openRead()));
       // get file length
@@ -228,7 +230,7 @@ class User {
       final prefs = await SharedPreferences.getInstance();
       var request = http.MultipartRequest(
           "POST", Uri.parse("http://localhost:3000/users/cvhandler"));
-      request.headers["Authorization"] = "Bearer " + prefs.getString("token");
+      request.headers["Authorization"] = "Bearer " + prefs.getString("token")!;
       request.fields["idUtilisateur"] = id.toString();
       var multipartFile = http.MultipartFile('cvFile', stream, length,
           filename: basename(file.path));
@@ -253,7 +255,7 @@ class User {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Access-Control-Allow-Origin": "*",
-        "Authorization": "Bearer " + prefs.getString("token"),
+        "Authorization": "Bearer " + prefs.getString("token")!,
       },
       body: jsonEncode(<String, String>{
         'dateDebut': dates.elementAt(0).millisecondsSinceEpoch.toString(),
@@ -278,7 +280,7 @@ class User {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Access-Control-Allow-Origin": "*",
-        "Authorization": "Bearer " + prefs.getString("token"),
+        "Authorization": "Bearer " + prefs.getString("token")!,
       },
       body: jsonEncode(<String, String>{
         'dateDebut': dates.elementAt(0).millisecondsSinceEpoch.toString(),
@@ -298,7 +300,7 @@ class User {
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           "Access-Control-Allow-Origin": "*",
-          "Authorization": "Bearer " + prefs.getString("token"),
+          "Authorization": "Bearer " + prefs.getString("token")!,
         },
         body: jsonEncode(
           <String, String>{
@@ -323,7 +325,7 @@ class User {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Access-Control-Allow-Origin": "*",
-        "Authorization": "Bearer " + prefs.getString("token"),
+        "Authorization": "Bearer " + prefs.getString("token")!,
       },
     ).then((http.Response response) {
       if (response.statusCode != 200) {
@@ -350,7 +352,7 @@ class User {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Access-Control-Allow-Origin": "*",
-        "Authorization": "Bearer " + prefs.getString("token"),
+        "Authorization": "Bearer " + prefs.getString("token")!,
       },
     );
     if (response.statusCode != 200) {
@@ -369,7 +371,7 @@ class User {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Access-Control-Allow-Origin": "*",
-        "Authorization": "Bearer " + prefs.getString("token"),
+        "Authorization": "Bearer " + prefs.getString("token")!,
       }
     );
     if (response.statusCode != 200) {
@@ -386,7 +388,7 @@ class User {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Access-Control-Allow-Origin": "*",
-        "Authorization": "Bearer " + prefs.getString("token"),
+        "Authorization": "Bearer " + prefs.getString("token")!,
       },
     ).then((http.Response response) {
       if (response.statusCode != 200) {
@@ -413,7 +415,7 @@ class User {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Access-Control-Allow-Origin": "*",
-        "Authorization": "Bearer " + prefs.getString("token"),
+        "Authorization": "Bearer " + prefs.getString("token")!,
       },
     );
     if (response.statusCode != 200) {
@@ -450,7 +452,7 @@ class User {
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           "Access-Control-Allow-Origin": "*",
-          "Authorization": "Bearer " + prefs.getString("token"),
+          "Authorization": "Bearer " + prefs.getString("token")!,
         },
         body: jsonEncode(
           <String, String>{

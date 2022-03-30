@@ -77,7 +77,7 @@ class Candidature {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Access-Control-Allow-Origin": "*",
-        "Authorization": "Bearer " + prefs.getString("token"),
+        "Authorization": "Bearer " + prefs.getString("token")!,
       },
     );
 
@@ -101,7 +101,7 @@ class Candidature {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Access-Control-Allow-Origin": "*",
-        "Authorization": "Bearer " + prefs.getString("token"),
+        "Authorization": "Bearer " + prefs.getString("token")!,
       },
       body: jsonEncode(
         <String, String>{

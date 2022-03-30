@@ -1,5 +1,6 @@
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studway_project/view/Home/Business/EntrepriseBusinessList.dart';
 import 'package:studway_project/view/offers/components/OfferForm.dart';
 
@@ -34,16 +35,17 @@ class _HomePageState extends State<HomePage> {
   }
 
   void getData() async {
+
     try {
       var person = await User.fetchUserInfo();
       var offers = await Offer.fetchAllOffersInfo();
-
       setState(() {
         _offerIndexList = offers;
         _user = person;
         _fetching = false;
       });
     } catch (e) {
+      print(e);
       setState(() {
         _errorWhileFetching = true;
       });
