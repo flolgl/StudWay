@@ -22,6 +22,7 @@ class ApplyToOfferState extends State<ApplyToOffer> {
   final Offer _offer;
   final TextEditingController _coverLetterController = TextEditingController();
   String warningMessage = "";
+  Color warningMessageColor = Colors.black;
 
   ApplyToOfferState(
       this._user, this._offer); //late Future<int> amountOfDaysSinceUpload;
@@ -130,7 +131,13 @@ class ApplyToOfferState extends State<ApplyToOffer> {
                   var reponse = await _user.applyTo(
                       _offer, _coverLetterController.text, warningMessage);
                   setState(() {
-                    warningMessage = reponse ? "" : "Vous avez déjà postulé à cette annonce";
+                    warningMessageColor =  reponse ? Colors.green : Colors.red;
+                  });
+                  setState(() {
+                    warningMessage = reponse ? "Votre candidature a été effectuée" : "Vous avez déjà postulé à cette annonce";
+                  });
+                  setState(() {
+                    _coverLetterController.clear();
                   });
                 },
               ),
@@ -139,9 +146,9 @@ class ApplyToOfferState extends State<ApplyToOffer> {
               textAlign: TextAlign.center,
               text: TextSpan(
                 text: warningMessage,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
-                  color: Colors.red,
+                  color: warningMessageColor,
                 ),
               ),
             ),

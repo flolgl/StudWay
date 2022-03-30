@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:studway_project/controller/conversation/Conversation.dart';
 import 'package:studway_project/controller/conversation/Message.dart';
 import 'package:studway_project/controller/user/User.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import 'MessageView.dart';
+
 class ConversationView extends StatefulWidget {
   final Conversation _conv;
 
   const ConversationView(this._conv, {Key? key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _ConversationViewState(_conv);
-
 }
-
-
 
 // TODO : Faire une vraie vue de conversation
 class _ConversationViewState extends State<ConversationView> {
@@ -22,10 +21,9 @@ class _ConversationViewState extends State<ConversationView> {
   List<Message>? messages;
   late IO.Socket _socket;
 
-
   _ConversationViewState(this._conversation);
-  TextEditingController _controller = TextEditingController();
 
+  TextEditingController _controller = TextEditingController();
 
   @override
   void initState() {
@@ -34,8 +32,7 @@ class _ConversationViewState extends State<ConversationView> {
     getConversationMsg();
   }
 
-
-  void getConversationMsg() async{
+  void getConversationMsg() async {
     var msg = await _conversation.getMessages();
     setState(() {
       messages = msg;
@@ -51,20 +48,23 @@ class _ConversationViewState extends State<ConversationView> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(),
       body: _buildListMessagesView(context),
+      bottomNavigationBar: buildMessageInputBar(),
     );
   }
 
   /// Retourne l'[AppBar] de la page affichant les conversations d'un user
   AppBar buildAppBar() {
     return AppBar(
-      title: Text(_conversation.members[0].id == User.currentUser!.id ? _conversation.members[1].nom + " " + _conversation.members[1].prenom : _conversation.members[0].nom + " " + _conversation.members[0].prenom),
-
+      title: Text(_conversation.members[0].id == User.currentUser!.id
+          ? _conversation.members[1].nom + " " + _conversation.members[1].prenom
+          : _conversation.members[0].nom +
+              " " +
+              _conversation.members[0].prenom),
     );
   }
 
@@ -85,62 +85,68 @@ class _ConversationViewState extends State<ConversationView> {
             shrinkWrap: true,
             itemCount: messages!.length,
             itemBuilder: (context, index) {
-              return MessageView(messages![index].text, messages![index].idSender == User.currentUser!.id, index == messages!.length, messages![index]);
+              return MessageView(
+                  messages![index].text,
+                  messages![index].idSender == User.currentUser!.id,
+                  index == messages!.length,
+                  messages![index]);
             },
           ),
           // build the text field to send a message to the conversation partner (the other user)
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: TextField(
-                  controller : _controller,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Message',
-                  ),
-                  onSubmitted: (text) {
-                    _conversation.sendMessage(text);
-                    setState(() {
-                      var newMsg = messages;
-                      newMsg!.add(Message(text, DateTime.now(), User.currentUser!.id));
-                      messages = newMsg;
-                    });
-                    _controller.clear();
-                  },
-                ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.send),
-                onPressed: () {
-                  _conversation.sendMessage(_controller.text);
-                  setState(() {
-                    var newMsg = messages;
-                    newMsg!.add(Message(_controller.text, DateTime.now(), User.currentUser!.id));
-                    messages = newMsg;
-                  });
-                  _controller.clear();
-                },
-              ),
-            ],
-          ),
-
-
           // TODO : Afficher le text field
         ],
       ),
     );
   }
 
+  Row buildMessageInputBar() {
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: TextField(
+            controller: _controller,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Message',
+            ),
+            onSubmitted: (text) {
+              _conversation.sendMessage(text);
+              setState(() {
+                var newMsg = messages;
+                newMsg!.add(Message(
+                    text, DateTime.now(), User.currentUser!.id));
+                messages = newMsg;
+              });
+              _controller.clear();
+            },
+          ),
+        ),
+        IconButton(
+          icon: const Icon(Icons.send),
+          onPressed: () {
+            _conversation.sendMessage(_controller.text);
+            setState(() {
+              var newMsg = messages;
+              newMsg!.add(Message(_controller.text, DateTime.now(),
+                  User.currentUser!.id));
+              messages = newMsg;
+            });
+            _controller.clear();
+          },
+        ),
+      ],
+    );
+  }
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Scaffold(
-  //     appBar: AppBar(
-  //       title: Text(_conversation.members.elementAt(0).prenom),
-  //     ),
-  //     body: Container(
-  //       child: Text(_conversation.lastMessage.text),
-  //     ),
-  //   );
-  // }
+// @override
+// Widget build(BuildContext context) {
+//   return Scaffold(
+//     appBar: AppBar(
+//       title: Text(_conversation.members.elementAt(0).prenom),
+//     ),
+//     body: Container(
+//       child: Text(_conversation.lastMessage.text),
+//     ),
+//   );
+// }
 }

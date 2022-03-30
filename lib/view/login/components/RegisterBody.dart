@@ -123,7 +123,7 @@ class RegisterBody extends State<RegisterForm> {
           const SizedBox(height: 20),
           Center(
               child: _hyperLinkBuild(
-                  context, "Already have an account ? Se connecter")),
+                  context, "Vous avez déjà un compte ? Se connecter")),
           const SizedBox(height: 30),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -181,7 +181,7 @@ class RegisterBody extends State<RegisterForm> {
         text: text,
         recognizer: TapGestureRecognizer()
           ..onTap = () {
-            print(text);
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Login()));
           },
       ),
     );
