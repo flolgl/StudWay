@@ -5,9 +5,13 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:studway_project/controller/candidature/Candidature.dart';
+import 'package:studway_project/controller/offer/Offer.dart';
 import 'package:studway_project/controller/user/User.dart';
+import 'package:studway_project/view/Home/Profile/components/ChangeDescription.dart';
 import 'package:studway_project/view/Home/Profile/pages/ExperienceForm.dart';
 import 'package:studway_project/view/Home/Profile/pages/FormationForm.dart';
+import 'package:studway_project/view/splash.dart';
 
 import '../../AppTheme.dart';
 import 'pages/CompetenceForm.dart';
@@ -38,15 +42,31 @@ class _ProfileState extends State<Profile> {
   }
 
   _getData() async {
-    var userFav = await _user.fetchCandidatFav();
-    var userCandidatures = await _user.fetchCandidature();
-    var userAcceptedCandidatures = userCandidatures.where((candidature) => candidature.retenue == 1).toList();
-    setState(() {
-      _userFavOffersCount = userFav.length;
-      _userCandidatureCount = userCandidatures.length;
-      _userAcceptedCandidaturesCount = userAcceptedCandidatures.length;
-      _isFetching = false;
-    });
+    if (_user.type == "Entreprise") {
+      var userFav = await Offer.fetchAllAnnonceOfEntreprise(_user.id);
+      int userCandidatures = 0;
+      for (var i = 0; i < userFav.length; i++) {
+        var tmp = await Candidature.fetchAllCandidaturesOfOffer(userFav[i]);
+        userCandidatures += tmp.length;
+      }
+      setState(() {
+        _userFavOffersCount = userFav.length;
+        _userCandidatureCount = userCandidatures;
+        _isFetching = false;
+      });
+    }else{
+      var userFav = await _user.fetchCandidatFav();
+      var userCandidatures = await _user.fetchCandidature();
+      var userAcceptedCandidatures = userCandidatures.where((candidature) => candidature.retenue == 1).toList();
+      setState(() {
+        _userFavOffersCount = userFav.length;
+        _userCandidatureCount = userCandidatures.length;
+        _userAcceptedCandidaturesCount = userAcceptedCandidatures.length;
+        _isFetching = false;
+      });
+    }
+
+
   }
 
   @override
@@ -95,16 +115,35 @@ class _ProfileState extends State<Profile> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    _buildStatsInfo(context),
+                    _user.type == "Entreprise" ? _buildEntrepriseStatsInfo() : _buildCandidatStatsInfo(context),
                     Padding(
                       padding: const EdgeInsets.all(15.0),
-                      child: _buildOptionsBody(context),
+                      child: _user.type == "Entreprise" ? _buildEntrepriseOptions() : _buildCandidatOptions(context),
                     ),
                   ],
                 ),
               ),
             ),
           ),
+          Container(
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              color: Colors.white,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Center(
+                child: IconButton(
+                  icon: const Icon(Icons.exit_to_app_outlined),
+                  onPressed: () async{
+                    await _user.logout();
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) => const Splash()));
+                  },
+                ),
+              ),
+            ),
+            ),
         ],
       ),
     );
@@ -114,8 +153,251 @@ class _ProfileState extends State<Profile> {
     // );
   }
 
+
+  Widget _buildEntrepriseStatsInfo(){
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: Container(
+            decoration: const BoxDecoration(
+              border: Border(
+                right: BorderSide(color: Colors.black45),
+              ),
+            ),
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text(
+                  "Nombre d'offres",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black45,
+                      fontSize: 14),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  _isFetching
+                      ? "Chargement..."
+                      : _userCandidatureCount.toString(),
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Expanded(
+          child: Container(
+            decoration: const BoxDecoration(
+              border: Border(
+                right: BorderSide(color: Colors.black45),
+              ),
+            ),
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text(
+                  "Nombre de candidatures",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black45,
+                      fontSize: 14),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  _isFetching ? "Chargement..." : _userFavOffersCount.toString(),
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Expanded(
+          child: Container(
+            child: Column(
+              children:  [
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text(
+                  "Prenium",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black45,
+                      fontSize: 14),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  _isFetching ? "Chargement..." : "Non",
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+
+  Widget _buildEntrepriseOptions(){
+    double width = MediaQuery.of(context).size.width;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Column(
+          children: <Widget>[
+            MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const ChangeDescription()));
+                },
+                child: Container(
+                  width: width / 2 - 30,
+                  height: 170,
+                  padding: const EdgeInsets.all(15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Container(
+                        child: const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Icon(Icons.description_outlined),
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      const Text(
+                        "Description",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.black45),
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Expanded(
+                              child: Wrap(
+                                children:[
+                                  RichText(
+                                  text: const TextSpan(
+                                    text: "Changer la\n",
+                                    children: [
+                                      TextSpan(text: "présentation de l'entreprise"),
+                                    ],
+                                  ),
+                                ),
+                                ],
+
+                              ),
+                            ),
+                            const Icon(Icons.arrow_forward),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppTheme.lightBlue,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+          ],
+        ),
+        Column(
+          children: <Widget>[
+            MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: GestureDetector(
+                onTap: () {
+                  _buildErrorPopUp(context, "Fonctionnalité pas encore disponible");
+                },
+                child: Container(
+                  width: width / 2 - 30,
+                  height: 170,
+                  padding: const EdgeInsets.all(15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Container(
+                        child: const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Icon(Icons.euro_outlined),
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      const Text(
+                        "Premium",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.black45),
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Expanded(
+                              child: Wrap(
+                                children: [
+                                  RichText(
+                                    text: const TextSpan(
+                                      text: "Obtenir\n",
+                                      children: [
+                                        TextSpan(text: "le prenium"),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const Icon(Icons.arrow_forward),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xff99d5f3),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
   /// Méthode retournant le form de connexion
-  Widget _buildOptionsBody(BuildContext context) {
+  Widget _buildCandidatOptions(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -127,7 +409,7 @@ class _ProfileState extends State<Profile> {
               child: GestureDetector(
                 onTap: () {
                   if (kIsWeb) {
-                    _buildErrorPopUp(context);
+                    _buildErrorPopUp(context, 'Impossible sur navigateur internet');
                   } else {
                     _user.setUserNewCV();
                   }
@@ -160,11 +442,17 @@ class _ProfileState extends State<Profile> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            RichText(
-                              text: const TextSpan(
-                                text: "Ajouter\n",
+                            Expanded(
+                              child: Wrap(
                                 children: [
-                                  TextSpan(text: "un CV"),
+                                  RichText(
+                                    text: const TextSpan(
+                                      text: "Ajouter\n",
+                                      children: [
+                                        TextSpan(text: "un CV"),
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -219,11 +507,17 @@ class _ProfileState extends State<Profile> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            RichText(
-                              text: const TextSpan(
-                                text: "Ajouter\n",
+                            Expanded(
+                              child: Wrap(
                                 children: [
-                                  TextSpan(text: "une expérience"),
+                                  RichText(
+                                    text: const TextSpan(
+                                      text: "Ajouter\n",
+                                      children: [
+                                        TextSpan(text: "une expérience"),
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -282,11 +576,17 @@ class _ProfileState extends State<Profile> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            RichText(
-                              text: const TextSpan(
-                                text: "Ajouter\n",
-                                children: [
-                                  TextSpan(text: "une formation"),
+                            Expanded(
+                              child: Wrap(
+                                children:[
+                                  RichText(
+                                    text: const TextSpan(
+                                      text: "Ajouter\n",
+                                      children: [
+                                        TextSpan(text: "une formation"),
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -341,11 +641,17 @@ class _ProfileState extends State<Profile> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            RichText(
-                              text: const TextSpan(
-                                text: "Ajouter\n",
-                                children: [
-                                  TextSpan(text: "une compétence"),
+                            Expanded(
+                              child: Wrap(
+                                children:[
+                                  RichText(
+                                    text: const TextSpan(
+                                      text: "Ajouter\n",
+                                      children: [
+                                        TextSpan(text: "une compétence"),
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -371,11 +677,11 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  void _buildErrorPopUp(BuildContext context) {
+  void _buildErrorPopUp(BuildContext context, String text) {
     showDialog<String>(
       context: context,
       builder: (BuildContext context) => AlertDialog(
-        title: const Text('Impossible sur navigateur internet'),
+        title: Text(text),
         actions: <Widget>[
           Center(
             child: TextButton(
@@ -388,8 +694,7 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  // TODO : vraiment mettre la photo de profile
-  /// Retournant un [CircleAvatar] du user
+  /// Retourne un [CircleAvatar] du user
   Widget _buildCircleAvatar() {
     var shownImage = image != null ? Image.file(image!) as ImageProvider : NetworkImage(_user.profilpic);
     return CircleAvatar(
@@ -398,7 +703,7 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  Widget _buildStatsInfo(BuildContext context) {
+  Widget _buildCandidatStatsInfo(BuildContext context) {
     return Row(
       children: <Widget>[
         Expanded(
@@ -499,7 +804,7 @@ class _ProfileState extends State<Profile> {
       final imageTemporary = File(image.path);
       setState(() => this.image = imageTemporary);
     } catch (e) {
-      _buildErrorPopUp(context);
+      _buildErrorPopUp(context, 'Impossible sur navigateur internet');
     }
   }
 }
@@ -527,14 +832,3 @@ Widget buildButton({
         onPressed: onClicked,
       ),
     );
-
-//
-// Container(
-// child: Text("Ajouter une formation"),
-// ),
-// Container(
-// child: Text("Ajouter un expérience professionnelle"),
-// ),
-// Container(
-// child: Text("Ajouter une compétence"),
-// ),

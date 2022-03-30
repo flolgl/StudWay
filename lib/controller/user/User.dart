@@ -18,7 +18,7 @@ class User {
   final String _prenom;
   final String _nom;
   final String _email;
-  final String _description;
+  String _description;
   final String _cvFile;
   final String _type;
   late IO.Socket _socket;
@@ -193,6 +193,23 @@ class User {
       },
       body: jsonEncode(<String, String>{'competence': competence}),
     );
+  }
+
+  /// Add a competence to the user
+  /// @param [String] the competence
+  void updateUserDescription(String description) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    await http.post(
+      Uri.parse("http://localhost:3000/users/update/"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        "Access-Control-Allow-Origin": "*",
+        "Authorization": "Bearer " + prefs.getString("token"),
+      },
+      body: jsonEncode(<String, String>{'Description': description}),
+    );
+    _description = description;
   }
 
   /// Add a cv to the user
@@ -453,5 +470,12 @@ class User {
       print(e.toString());
       return false;
     }
+  }
+
+  Future<void> logout() async {
+
+    final prefs = await SharedPreferences.getInstance();
+    prefs.clear();
+
   }
 }

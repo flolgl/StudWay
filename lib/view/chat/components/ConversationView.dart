@@ -92,8 +92,6 @@ class _ConversationViewState extends State<ConversationView> {
                   messages![index]);
             },
           ),
-          // build the text field to send a message to the conversation partner (the other user)
-          // TODO : Afficher le text field
         ],
       ),
     );
