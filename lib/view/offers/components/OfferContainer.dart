@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studway_project/controller/conversation/Conversation.dart';
 import 'package:studway_project/view/chat/components/ConversationView.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../controller/offer/Offer.dart';
 import '../../../controller/user/User.dart';
@@ -51,17 +50,7 @@ class _OfferContainerState extends State<OfferContainer> {
           builder: (context, snapshot) {
             if (snapshot.hasData && isFetched) {
               return GestureDetector(
-                onTap: () async {
-                  if (snapshot.data!.lien != "-1"){
-                    if (await canLaunch(snapshot.data!.lien)){
-                      await launch(snapshot.data!.lien);
-                      return;
-                    }
-                    else{
-                      _errorPopUp(context, "Impossible d'ouvrir le lien");
-                      return;
-                    }
-                  }
+                onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) =>
                           OfferFullView(User.currentUser!, snapshot.data!)));
@@ -266,20 +255,4 @@ class _OfferContainerState extends State<OfferContainer> {
     return false;
   }
 
-  void _errorPopUp(BuildContext context, String s) {
-    showDialog<String>(
-      context: context,
-      builder: (BuildContext context) => AlertDialog(
-        title: Text(s),
-        actions: <Widget>[
-          Center(
-            child: TextButton(
-              onPressed: () => Navigator.pop(context, 'OK'),
-              child: const Text('OK'),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }
