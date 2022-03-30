@@ -31,11 +31,17 @@ class Conversation{
     var userA = await User.fetchStrictUserInfo(e["idUtilisateurA"]);
     var userB = await User.fetchStrictUserInfo(e["idUtilisateurB"]);
     var users = [userA, userB];
+    Message lastMsg;
+    if (e["Message"] == null){
+      lastMsg = Message("", DateTime.now(), User.currentUser!.id);
+    }else{
+      lastMsg = Message(e["Message"], DateTime.parse(e["DateEnvoi"]), e["idUtilisateur"]);
+    }
     return Conversation(
       e['idConversation'],
       e['Libelle'],
-      Message(e["Message"], DateTime.parse(e["DateEnvoi"]), e["idUtilisateur"]),
-      DateTime.now(),
+      lastMsg,
+      lastMsg.time,
       users
     );
   }
@@ -63,7 +69,7 @@ class Conversation{
     if (response.statusCode == 200) {
       messages.addAll(Message.fromJsonList(jsonDecode(response.body)));
     }
-    messages.forEach((message) => print(message.text));
+    //messages.forEach((message) => print(message.text));
     return messages;
   }
 
@@ -72,5 +78,25 @@ class Conversation{
     var user = User.currentUser;
     user!.sendNewMsg(id, user.id == members.first.id ? members.last.id : members.first.id , s);
   }
+
+  static Future<Conversation> createConversation(User user, User user2, int idAnnonce, String libelle) async{
+    final prefs = await SharedPreferences.getInstance();
+    final response = await http.post(Uri.parse("http://localhost:3000/conversation/create/${user.id}"), headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+      "Authorization": "Bearer ${prefs.getString('token')}"
+    }, body: jsonEncode({
+      "idUtilisateurDestinataire": user2.id,
+      "idAnnonce": idAnnonce,
+      "libelle": libelle,
+    }));
+
+    print(response.body);
+    if (response.statusCode == 200) {
+      return Conversation.fromJson(jsonDecode(response.body));
+    }
+    throw Exception('Failed to create conversation');
+  }
+
 
 }

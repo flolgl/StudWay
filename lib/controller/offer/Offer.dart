@@ -10,9 +10,10 @@ class Offer {
   final String _location;
   final String _description;
   final DateTime _uploadDate;
+  final int _userId;
 
   Offer(this._idAnnonce, this._titre, this._location, this._description,
-      this._uploadDate);
+      this._uploadDate, this._userId);
 
   factory Offer.fromJson(Map<String, dynamic> json) {
     return Offer(
@@ -21,6 +22,7 @@ class Offer {
       json['localisation'],
       json['Description'],
       DateTime.parse(json['datePublication']),
+      json['idEntreprise'],
     );
   }
 
@@ -33,6 +35,8 @@ class Offer {
   String get description => _description;
 
   DateTime get uploadDate => _uploadDate;
+
+  int get entrepriseId => _userId;
 
   static Future<Offer> fetchOfferInfoByID(int id) async {
     try {

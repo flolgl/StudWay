@@ -159,6 +159,9 @@ class _OfferFullViewState extends State<OfferFullView> {
                   ],
                 ),
                 onPressed: () {
+                  if (_user.type == "Entreprise"){
+                    return;
+                  }
                   Navigator.of(context)
                       .push(MaterialPageRoute(builder: (context) => ApplyToOffer(_user, _offer)));
                 },

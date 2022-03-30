@@ -15,7 +15,7 @@ class Candidature {
     return Candidature(
       json['idCandidature'],
       json['LettreMotivation'],
-      Offer(json['idAnnonce'], json["titre"], json["localisation"], json["Description"], DateTime.parse(json["datePublication"])),
+      Offer(json['idAnnonce'], json["titre"], json["localisation"], json["Description"], DateTime.parse(json["datePublication"]), json['idEntreprise']),
       json["idCandidat"],
       json["retenue"],
     );

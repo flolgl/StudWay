@@ -93,6 +93,7 @@ class _ChatListState extends State<ChatList>{
   /// @see Conversation
   Widget _buildConversationView(BuildContext context, int index) {
     final Conversation conv = _conversations![index];
+    final destinaire = conv.members.firstWhere((u) => u.id != _user.id);
     return Container(
       child: MouseRegion(
         cursor: SystemMouseCursors.click,
@@ -105,7 +106,7 @@ class _ChatListState extends State<ChatList>{
             child: Row(
               children: [
                 CircleAvatar(
-                  backgroundImage: NetworkImage(conv.members.elementAt(0).profilpic),
+                  backgroundImage: NetworkImage(destinaire.profilpic),
                 ),
                 const SizedBox(width: 8.0),
                 Expanded(
@@ -113,7 +114,7 @@ class _ChatListState extends State<ChatList>{
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        conv.members.elementAt(0).nom + " " + conv.members.elementAt(0).prenom,
+                        destinaire.nom + " " + destinaire.prenom,
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
@@ -130,7 +131,7 @@ class _ChatListState extends State<ChatList>{
                 ),
                 Text(
                   Utils.getDiff(conv.lastMessage.time, DateTime.now()).toString(),
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.grey,
                   ),
                 ),
