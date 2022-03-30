@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:studway_project/controller/user/User.dart';
 
 class Offer {
   final int _idAnnonce;
@@ -138,5 +139,27 @@ class Offer {
     return list;
 
   }
+
+
+  // TODO : delete offer (cascade delete et tout en bdd + verif user = proprietaire annonce)
+  static Future<bool> deleteUserOffer(int id) async{
+    final prefs = await SharedPreferences.getInstance();
+
+    var response = await http.delete(
+      Uri.parse("http://localhost:3000/annonce/$id/${User.currentUser!.id}"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        "Access-Control-Allow-Origin": "*",
+        "Authorization": "Bearer " + prefs.getString("token"),
+      },
+    );
+
+    if(response.statusCode != 200 ){
+      return false;
+    }
+
+    return true;
+  }
+
 
 }
