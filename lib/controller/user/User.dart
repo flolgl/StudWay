@@ -272,8 +272,8 @@ class User {
     );
   }
 
-  void createNewOffer(String jobTitle, String location,
-      String description) async {
+  void createNewOffer(
+      String jobTitle, String location, String description) async {
     final prefs = await SharedPreferences.getInstance();
     try {
       http.post(
@@ -299,7 +299,7 @@ class User {
   }
 
   /// Return user's offers fav list
-  Future<List<Offer>> fetchCandidatFav() async{
+  Future<List<Offer>> fetchCandidatFav() async {
     final prefs = await SharedPreferences.getInstance();
     return http.get(
       Uri.parse("http://localhost:3000/annonce/favoris/" + id.toString()),
@@ -323,23 +323,45 @@ class User {
     });
   }
 
-  Future<bool> deleteFav(int id) async{
+  Future<bool> deleteFav(int id) async {
     final prefs = await SharedPreferences.getInstance();
     final response = await http.post(
-      Uri.parse("http://localhost:3000/annonce/deleteFav/" + id.toString() + "/" + _id.toString()),
+      Uri.parse("http://localhost:3000/annonce/deleteFav/" +
+          id.toString() +
+          "/" +
+          _id.toString()),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Access-Control-Allow-Origin": "*",
         "Authorization": "Bearer " + prefs.getString("token"),
       },
     );
-    if(response.statusCode != 200){
+    if (response.statusCode != 200) {
       return false;
     }
     return true;
   }
 
-  Future<List<Candidature>> fetchCandidature() async{
+  Future<bool> addFav(int id) async {
+    final prefs = await SharedPreferences.getInstance();
+    final response = await http.post(
+      Uri.parse("http://localhost:3000/annonce/addFav/" +
+          id.toString() +
+          "/" +
+          _id.toString()),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        "Access-Control-Allow-Origin": "*",
+        "Authorization": "Bearer " + prefs.getString("token"),
+      }
+    );
+    if (response.statusCode != 200) {
+      return false;
+    }
+    return true;
+  }
+
+  Future<List<Candidature>> fetchCandidature() async {
     final prefs = await SharedPreferences.getInstance();
 
     return http.get(
@@ -364,24 +386,27 @@ class User {
     });
   }
 
-  Future<bool> deleteCandidature(int id) async{
+  Future<bool> deleteCandidature(int id) async {
     final prefs = await SharedPreferences.getInstance();
     final response = await http.post(
-      Uri.parse("http://localhost:3000/candidatures/delete/" + id.toString() + "/" + _id.toString()),
+      Uri.parse("http://localhost:3000/candidatures/delete/" +
+          id.toString() +
+          "/" +
+          _id.toString()),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Access-Control-Allow-Origin": "*",
         "Authorization": "Bearer " + prefs.getString("token"),
       },
     );
-    if(response.statusCode != 200){
+    if (response.statusCode != 200) {
       return false;
     }
     return true;
   }
 
-
-  Future<bool> applyTo(Offer offer, String lettreMotivation, String warningMessage) async {
+  Future<bool> applyTo(
+      Offer offer, String lettreMotivation, String warningMessage) async {
     final prefs = await SharedPreferences.getInstance();
     try {
       var request = await http.post(
@@ -401,7 +426,7 @@ class User {
         ),
       );
 
-      if(request.statusCode == 403){
+      if (request.statusCode == 403) {
         return false;
       }
       return true;
@@ -410,5 +435,4 @@ class User {
       return false;
     }
   }
-
 }

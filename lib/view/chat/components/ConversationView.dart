@@ -99,42 +99,45 @@ class _ConversationViewState extends State<ConversationView> {
     );
   }
 
-  Row buildMessageInputBar() {
-    return Row(
-      children: <Widget>[
-        Expanded(
-          child: TextField(
-            controller: _controller,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Message',
+  Padding buildMessageInputBar() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: TextField(
+              controller: _controller,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Message',
+              ),
+              onSubmitted: (text) {
+                _conversation.sendMessage(text);
+                setState(() {
+                  var newMsg = messages;
+                  newMsg!.add(Message(
+                      text, DateTime.now(), User.currentUser!.id));
+                  messages = newMsg;
+                });
+                _controller.clear();
+              },
             ),
-            onSubmitted: (text) {
-              _conversation.sendMessage(text);
+          ),
+          IconButton(
+            icon: const Icon(Icons.send),
+            onPressed: () {
+              _conversation.sendMessage(_controller.text);
               setState(() {
                 var newMsg = messages;
-                newMsg!.add(Message(
-                    text, DateTime.now(), User.currentUser!.id));
+                newMsg!.add(Message(_controller.text, DateTime.now(),
+                    User.currentUser!.id));
                 messages = newMsg;
               });
               _controller.clear();
             },
           ),
-        ),
-        IconButton(
-          icon: const Icon(Icons.send),
-          onPressed: () {
-            _conversation.sendMessage(_controller.text);
-            setState(() {
-              var newMsg = messages;
-              newMsg!.add(Message(_controller.text, DateTime.now(),
-                  User.currentUser!.id));
-              messages = newMsg;
-            });
-            _controller.clear();
-          },
-        ),
-      ],
+        ],
+      ),
     );
   }
 

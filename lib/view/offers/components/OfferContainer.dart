@@ -21,6 +21,9 @@ class _OfferContainerState extends State<OfferContainer> {
     Icons.favorite_border_outlined,
     color: Colors.grey,
   );
+  late List<Offer> allFavOffers;
+  bool offerIsFav = false;
+  bool isFetched = false;
 
   _OfferContainerState(this.id); //late Future<int> amountOfDaysSinceUpload;
 
@@ -28,6 +31,7 @@ class _OfferContainerState extends State<OfferContainer> {
   void initState() {
     super.initState();
     futureOffer = Offer.fetchOfferInfoByID(id);
+    isOfferFav();
     //amountOfDaysSinceUpload = Offer.amountOfTimeSinceUpload();
   }
 
@@ -42,7 +46,7 @@ class _OfferContainerState extends State<OfferContainer> {
         child: FutureBuilder<Offer>(
           future: futureOffer,
           builder: (context, snapshot) {
-            if (snapshot.hasData) {
+            if (snapshot.hasData && isFetched) {
               return GestureDetector(
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(
@@ -87,18 +91,48 @@ class _OfferContainerState extends State<OfferContainer> {
                             ),
                           ),
                           Padding(
-                              padding: EdgeInsets.only(top: 10, right: 12),
+                              padding:
+                                  const EdgeInsets.only(top: 10, right: 12),
                               child: IconButton(
-                                icon: favoriteIcon,
-                                onPressed: () {
-                                  if (favoriteIcon.color == Colors.grey) {
-                                    setState(() {
-                                      favoriteIcon = const Icon(
-                                        Icons.favorite,
-                                        color: Colors.red,
-                                      );
-                                    });
+                                icon: Icon(Icons.favorite_border_outlined,
+                                    color: containsFav(snapshot.data!)
+                                        ? Colors.red
+                                        : Colors.grey),
+                                onPressed: () async {
+                                  if (containsFav(snapshot.data!)) {
+                                    var deleted =
+                                        await User.currentUser!.deleteFav(id);
+                                    if (deleted) {
+                                      setState(() {
+                                        allFavOffers.removeWhere((item) =>
+                                            item.id == snapshot.data!.id);
+                                      });
+                                    }
                                   } else {
+                                    var added = await User.currentUser!.addFav(id);
+                                    if(added) {
+                                      setState(() {
+                                        allFavOffers.add(snapshot.data!);
+                                      });
+                                    }
+                                  }
+                                  /*
+                                  if (allFavOffers.contains(element)) {
+                                    var added =
+                                        await User.currentUser!.addFav(id);
+                                    print("added");
+                                    setState(
+                                      () {
+                                        favoriteIcon = const Icon(
+                                          Icons.favorite,
+                                          color: Colors.red,
+                                        );
+                                      },
+                                    );
+                                  } else {
+                                    var deleted =
+                                        await User.currentUser!.deleteFav(id);
+                                    print("deleted");
                                     setState(() {
                                       favoriteIcon = const Icon(
                                         Icons.favorite_border_outlined,
@@ -106,6 +140,7 @@ class _OfferContainerState extends State<OfferContainer> {
                                       );
                                     });
                                   }
+                                */
                                 },
                               )),
                         ],
@@ -182,5 +217,22 @@ class _OfferContainerState extends State<OfferContainer> {
         ),
       ),
     );
+  }
+
+  void isOfferFav() async {
+    var favList = await User.currentUser!.fetchCandidatFav();
+    setState(() {
+      allFavOffers = favList;
+      isFetched = true;
+    });
+  }
+
+  bool containsFav(Offer offer) {
+    for (var offre in allFavOffers) {
+      if (offre.id == offer.id) {
+        return true;
+      }
+    }
+    return false;
   }
 }

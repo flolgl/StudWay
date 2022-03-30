@@ -17,15 +17,18 @@ class LoginAuth {
         },
         body: jsonEncode(
           <String, String>{
-            'email': email,
-            'password': password,
+            'Email': email,
+            'Password': password,
+            'Nom': 'nom',
+            'Prenom': 'prenom',
+            'Description': 'NULL',
           },
         ),
       );
-      print(response.body);
-      print(response.statusCode);
       return response.statusCode == 201;
     } catch (e) {
+      print(e.toString());
+      throw Exception;
       return false;
     }
   }
