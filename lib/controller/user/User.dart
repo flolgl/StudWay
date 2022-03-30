@@ -405,6 +405,25 @@ class User {
     return true;
   }
 
+  static Future<User> fetchUserInfoByID(int id) async {
+    try {
+      final response = await http
+          .get(Uri.parse("http://localhost:3000/users/" + id.toString()));
+      if (response.statusCode == 200) {
+        // If the server did return a 200 OK response,
+        // then parse the JSON.
+        return User.fromJson(jsonDecode(response.body));
+      } else {
+        // If the server did not return a 200 OK response,
+        // then throw an exception.
+        throw Exception('Status code != 200');
+      }
+    } catch (e) {
+      throw Exception('caught http error');
+    }
+  }
+
+
   Future<bool> applyTo(
       Offer offer, String lettreMotivation, String warningMessage) async {
     final prefs = await SharedPreferences.getInstance();

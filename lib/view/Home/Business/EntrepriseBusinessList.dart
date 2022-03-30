@@ -16,7 +16,9 @@ class _EntrepriseBusinessListState extends State<EntrepriseBusinessList> {
   late List<List<Candidature>> _candidaturesList;
   late List<bool> _areNonRefusedCandidaturesShowed;
   late List<bool> _areAllCandidaturesShowed;
+  late List<List<User>> _userList;
   bool _isFetched = false;
+
 
   @override
   void initState() {
@@ -59,6 +61,7 @@ class _EntrepriseBusinessListState extends State<EntrepriseBusinessList> {
     setState(() {
       _annoncesList = annoncesList;
       _candidaturesList = List.filled(annoncesList.length, <Candidature>[]);
+      _userList = List.filled(annoncesList.length, <User>[]);
       _areNonRefusedCandidaturesShowed = List.filled(annoncesList.length, false);
       _areAllCandidaturesShowed = List.filled(annoncesList.length, false);
       _isFetched = true;
@@ -139,7 +142,12 @@ class _EntrepriseBusinessListState extends State<EntrepriseBusinessList> {
                           }
 
                           var candidatures = await Candidature.fetchCandidaturesNotRefusedOfOffer(_annoncesList[index]);
+                          List<User> users = [];
+                          for(var candidature in candidatures){
+                            users.add(await User.fetchStrictUserInfo(candidature.idCandidat));
+                          }
                           setState(() {
+                            _userList[index] = users;
                             _candidaturesList[index] = candidatures;
                             _areAllCandidaturesShowed[index] = !_areAllCandidaturesShowed[index];
                           });
@@ -158,7 +166,13 @@ class _EntrepriseBusinessListState extends State<EntrepriseBusinessList> {
                           }
 
                           var candidatures = await Candidature.fetchAllCandidaturesOfOffer(_annoncesList[index]);
+                          List<User> users = [];
+                          for(var candidature in candidatures){
+                            users.add(await User.fetchStrictUserInfo(candidature.idCandidat));
+                          }
+                             //await User.fetchUserInfoByID(userId)
                           setState(() {
+                            _userList[index] = users;
                             _candidaturesList[index] = candidatures;
                             _areNonRefusedCandidaturesShowed[index] = !_areNonRefusedCandidaturesShowed[index];
                           });
@@ -187,7 +201,7 @@ class _EntrepriseBusinessListState extends State<EntrepriseBusinessList> {
                           shrinkWrap: true,
                           itemCount: _candidaturesList[index].length,
                           itemBuilder: (context, indice) {
-                            return _candidaturesList[index].length == 0
+                            return _candidaturesList[index].isEmpty
                                 ? const Center(
                                     child: Padding(
                                       padding: EdgeInsets.all(8.0),
@@ -196,7 +210,7 @@ class _EntrepriseBusinessListState extends State<EntrepriseBusinessList> {
                                   )
                                 : Card(
                                   child: ListTile(
-                                    title: Text(_candidaturesList[index][indice].idCandidat.toString()),
+                                    title: Text(_userList[index][indice].prenom + " " + _userList[index][indice].nom),
                                     subtitle: Text(_candidaturesList[index][indice].lettreMotivation),
                                     leading: CircleAvatar(
                                       backgroundImage: NetworkImage("http://localhost:3000/users/photoprofile/${_candidaturesList[index][indice].idCandidat}"),
