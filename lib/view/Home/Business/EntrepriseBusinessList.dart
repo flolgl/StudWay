@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:studway_project/controller/candidature/Candidature.dart';
 import 'package:studway_project/controller/offer/Offer.dart';
 import 'package:studway_project/controller/user/User.dart';
+import 'package:studway_project/view/User/UserProfile.dart';
 import 'package:studway_project/view/offers/components/OfferForm.dart';
 
 class EntrepriseBusinessList extends StatefulWidget {
@@ -218,6 +219,13 @@ class _EntrepriseBusinessListState extends State<EntrepriseBusinessList> {
                                     trailing: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
+                                        IconButton(
+                                          icon: const Icon(Icons.person_outlined),
+                                          onPressed: () {
+                                            Navigator.of(context).push(MaterialPageRoute(
+                                                builder: (context) => UserProfile(_userList[index][indice])));
+                                          },
+                                        ),
                                         IconButton(
                                           icon: const Icon(Icons.done_outlined),
                                           disabledColor: Colors.green,
