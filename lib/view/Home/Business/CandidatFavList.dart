@@ -112,7 +112,7 @@ class _FavListState extends State<CandidatFavList> {
   Widget _buildFavListView(){
     if (_favList.isEmpty) {
       return const Center(
-        child: Text("Aucune offre favorie"),
+        child: Text("Aucune offre favorite"),
       );
     }
     return ListView.builder(

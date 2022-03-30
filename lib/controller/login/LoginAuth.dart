@@ -1,21 +1,29 @@
 import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginAuth {
   static Future<bool> register(String email, String password) async {
+    final prefs = await SharedPreferences.getInstance();
     try {
+      print("TEST");
       var response = await http.post(
         Uri.parse('http://localhost:3000/register'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           "Access-Control-Allow-Origin": "*",
+          "Authorization": "Bearer " + prefs.getString("token"),
         },
-        body: jsonEncode(<String, String>{
-          'email': email,
-          'password': password,
-        }),
+        body: jsonEncode(
+          <String, String>{
+            'email': email,
+            'password': password,
+          },
+        ),
       );
+      print(response.body);
+      print(response.statusCode);
       return response.statusCode == 201;
     } catch (e) {
       return false;
@@ -42,7 +50,7 @@ class LoginAuth {
 
     final List<dynamic>? token = getToken(response.body);
 
-    if (response.statusCode!=200 || token == null) {
+    if (response.statusCode != 200 || token == null) {
       return false;
     }
 
@@ -50,7 +58,6 @@ class LoginAuth {
     prefs.setString("token", token.elementAt(0));
     prefs.setString("id", token.elementAt(1).toString());
     return true;
-
   }
 
   static List<dynamic>? getToken(String body) {
@@ -58,14 +65,12 @@ class LoginAuth {
     return [parsed["accessToken"], parsed["idUtilisateur"]];
   }
 
-
   static Future<bool> isUserLoggedIn() async {
     final prefs = await SharedPreferences.getInstance();
-    try{
+    try {
       return prefs.getString("token") != null;
-    }catch(e) {
+    } catch (e) {
       return false;
     }
-
   }
 }

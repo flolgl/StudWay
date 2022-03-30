@@ -17,6 +17,11 @@ class _OfferContainerState extends State<OfferContainer> {
   late Future<Offer> futureOffer;
   final int id;
 
+  Icon favoriteIcon = const Icon(
+    Icons.favorite_border_outlined,
+    color: Colors.grey,
+  );
+
   _OfferContainerState(this.id); //late Future<int> amountOfDaysSinceUpload;
 
   @override
@@ -40,8 +45,9 @@ class _OfferContainerState extends State<OfferContainer> {
             if (snapshot.hasData) {
               return GestureDetector(
                 onTap: () {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (context) => OfferFullView(User.currentUser!, snapshot.data!)));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) =>
+                          OfferFullView(User.currentUser!, snapshot.data!)));
                 },
                 child: Container(
                   height: 250,
@@ -56,25 +62,53 @@ class _OfferContainerState extends State<OfferContainer> {
                         color: Colors.grey.withOpacity(0.5),
                         spreadRadius: -7,
                         blurRadius: 15,
-                        offset: const Offset(0, 10), // changes position of shadow
+                        offset:
+                            const Offset(0, 10), // changes position of shadow
                       ),
                     ],
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(15, 15, 15, 7),
-                        child: RichText(
-                          text: TextSpan(
-                            text: snapshot.data!.titre,
-                            style: const TextStyle(
-                              fontSize: 22,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(15, 15, 15, 7),
+                            child: RichText(
+                              text: TextSpan(
+                                text: snapshot.data!.titre,
+                                style: const TextStyle(
+                                  fontSize: 22,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                          Padding(
+                              padding: EdgeInsets.only(top: 10, right: 12),
+                              child: IconButton(
+                                icon: favoriteIcon,
+                                onPressed: () {
+                                  if (favoriteIcon.color == Colors.grey) {
+                                    setState(() {
+                                      favoriteIcon = const Icon(
+                                        Icons.favorite,
+                                        color: Colors.red,
+                                      );
+                                    });
+                                  } else {
+                                    setState(() {
+                                      favoriteIcon = const Icon(
+                                        Icons.favorite_border_outlined,
+                                        color: Colors.grey,
+                                      );
+                                    });
+                                  }
+                                },
+                              )),
+                        ],
                       ),
                       Padding(
                         padding: const EdgeInsets.only(
@@ -124,8 +158,9 @@ class _OfferContainerState extends State<OfferContainer> {
                         ),
                         child: RichText(
                           text: TextSpan(
-                            text:
-                                snapshot.data!.timeSinceUploadInDays().toString(),
+                            text: snapshot.data!
+                                .timeSinceUploadInDays()
+                                .toString(),
                             style: const TextStyle(
                               fontSize: 13,
                               color: Colors.grey,

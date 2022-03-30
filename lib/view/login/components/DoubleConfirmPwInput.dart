@@ -35,6 +35,7 @@ class DoubleConfirmPwInput extends StatelessWidget {
                 return "Merci de choisir un mot de passe plus difficile";
               }
               if (!validatePw(input)) {
+                print(input);
                 return "Le mot de passe doit comporter des caractères spéciaux, être de longueur 12 minimum et avoir au moins 1 majuscule";
               }
               input1 = input;
