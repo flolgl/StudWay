@@ -1,5 +1,6 @@
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
+import 'package:studway_project/view/Home/Business/EntrepriseBusinessList.dart';
 import 'package:studway_project/view/offers/components/OfferForm.dart';
 
 import '../controller/offer/Offer.dart';
@@ -85,7 +86,7 @@ class _HomePageState extends State<HomePage> {
           },
         );
       case 1:
-        return _user.type == "Entreprise" ? OfferForm(_user) : const CandidatFavList();
+        return _user.type == "Entreprise" ? const EntrepriseBusinessList() : const CandidatFavList();
       default:
         return _buildProfileScreen();
     }

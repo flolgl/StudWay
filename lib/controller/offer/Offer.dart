@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -113,4 +112,31 @@ class Offer {
       throw Exception('caught http error');
     }
   }
+
+
+  static Future<List<Offer>> fetchAllAnnonceOfEntreprise(int id) async{
+    final prefs = await SharedPreferences.getInstance();
+
+    var response = await http.get(
+      Uri.parse("http://localhost:3000/annonces/user/$id"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        "Access-Control-Allow-Origin": "*",
+        "Authorization": "Bearer " + prefs.getString("token"),
+      },
+    );
+
+    if(response.statusCode != 200 && response.statusCode != 404 ){
+      throw Exception("Err 05: Fetch failed");
+    }
+
+    List<Offer> list = <Offer>[];
+    final responseLength = json.decode(response.body);
+    for (int i = 0; i < responseLength.length; i++) {
+      list.add(Offer.fromJson(jsonDecode(response.body)[i]));
+    }
+    return list;
+
+  }
+
 }
