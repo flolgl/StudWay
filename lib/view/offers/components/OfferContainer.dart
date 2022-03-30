@@ -9,7 +9,7 @@ import 'OfferFullView.dart';
 class OfferContainer extends StatefulWidget {
   final int id;
 
-  OfferContainer(this.id, {Key? key}) : super(key: key);
+  const OfferContainer(this.id, {Key? key}) : super(key: key);
 
   @override
   State<OfferContainer> createState() => _OfferContainerState(id);
@@ -56,7 +56,7 @@ class _OfferContainerState extends State<OfferContainer> {
                           OfferFullView(User.currentUser!, snapshot.data!)));
                 },
                 child: Container(
-                  height: 250,
+                  height: 150,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     border: Border.all(
@@ -76,87 +76,91 @@ class _OfferContainerState extends State<OfferContainer> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(15, 15, 15, 7),
-                                child: RichText(
-                                  text: TextSpan(
-                                    text: snapshot.data!.titre,
-                                    style: const TextStyle(
-                                      fontSize: 22,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              left: 15,
-                            ),
-                            child: RichText(
-                              text: TextSpan(
-                                text: snapshot.data!.description,
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              left: 10,
-                              top: 5,
-                            ),
-                            child: Row(
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Icon(
-                                  Icons.room,
-                                  color: Colors.grey,
-                                ),
-                                RichText(
-                                  text: TextSpan(
-                                    text: snapshot.data!.location,
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.normal,
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(15, 15, 15, 7),
+                                  child: RichText(
+                                    text: TextSpan(
+                                      text: snapshot.data!.titre,
+                                      style: const TextStyle(
+                                        fontSize: 22,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ],
                             ),
-                          ),
-                          const Spacer(),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              left: 15,
-                              top: 3,
-                              bottom: 10,
-                            ),
-                            child: RichText(
-                              text: TextSpan(
-                                text: snapshot.data!
-                                    .timeSinceUploadInDays()
-                                    .toString(),
-                                style: const TextStyle(
-                                  fontSize: 13,
-                                  color: Colors.grey,
-                                  fontWeight: FontWeight.normal,
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: 15,
+                              ),
+                              child: RichText(
+                                softWrap: false,
+                                overflow: TextOverflow.ellipsis,
+                                text: TextSpan(
+                                  text: snapshot.data!.description,
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.normal,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: 10,
+                                top: 5,
+                              ),
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.room,
+                                    color: Colors.grey,
+                                  ),
+                                  RichText(
+                                    text: TextSpan(
+                                      text: snapshot.data!.location,
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const Spacer(),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: 15,
+                                top: 3,
+                                bottom: 10,
+                              ),
+                              child: RichText(
+                                text: TextSpan(
+                                  text: snapshot.data!
+                                      .timeSinceUploadInDays()
+                                      .toString(),
+                                  style: const TextStyle(
+                                    fontSize: 13,
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                       Column(
                         children: [

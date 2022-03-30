@@ -59,7 +59,7 @@ class AddOfferBodyState extends State<AddOfferBody> {
                         border: InputBorder.none,
                         hintText: "Titre de l'annonce",
                         hintStyle: TextStyle(color: Colors.grey),
-                        prefixIcon: Icon(Icons.handyman),
+                        prefixIcon: Icon(Icons.title_outlined),
                       ),
                       validator: (value) =>
                           value == null || value.isEmpty ? "Champs vide" : null,
@@ -75,9 +75,9 @@ class AddOfferBodyState extends State<AddOfferBody> {
                       controller: _descriptionController,
                       decoration: const InputDecoration(
                         border: InputBorder.none,
-                        hintText: "description de l'annonce",
+                        hintText: "Description de l'annonce",
                         hintStyle: TextStyle(color: Colors.grey),
-                        prefixIcon: Icon(Icons.handyman),
+                        prefixIcon: Icon(Icons.description_outlined),
                       ),
                       validator: (value) =>
                           value == null || value.isEmpty ? "Champs vide" : null,
@@ -95,7 +95,7 @@ class AddOfferBodyState extends State<AddOfferBody> {
                         border: InputBorder.none,
                         hintText: "Site de travail",
                         hintStyle: TextStyle(color: Colors.grey),
-                        prefixIcon: Icon(Icons.handyman),
+                        prefixIcon: Icon(Icons.location_on_outlined),
                       ),
                       validator: (value) =>
                           value == null || value.isEmpty ? "Champs vide" : null,
