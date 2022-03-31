@@ -167,10 +167,10 @@ class _OfferFullViewState extends State<OfferFullView> {
                     if (await canLaunch(_offer.lien)) {
                       await launch(_offer.lien);
                       return;
+                    }else{
+                      _errorPopUp(context, "Impossible d'ouvrir le lien");
+                      return;
                     }
-                  }else{
-                    _errorPopUp(context, "Impossible d'ouvrir le lien");
-                    return;
                   }
 
                   Navigator.of(context)
