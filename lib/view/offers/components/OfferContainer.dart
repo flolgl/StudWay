@@ -56,7 +56,7 @@ class _OfferContainerState extends State<OfferContainer> {
                           OfferFullView(User.currentUser!, snapshot.data!)));
                 },
                 child: Container(
-                  height: 150,
+                  height: 200,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     border: Border.all(
@@ -80,23 +80,20 @@ class _OfferContainerState extends State<OfferContainer> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(15, 15, 15, 7),
-                                  child: RichText(
-                                    text: TextSpan(
-                                      text: snapshot.data!.titre,
-                                      style: const TextStyle(
-                                        fontSize: 22,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(15, 15, 15, 7),
+                              child: RichText(
+                                softWrap: false,
+                                overflow: TextOverflow.ellipsis,
+                                text: TextSpan(
+                                  text: snapshot.data!.titre,
+                                  style: const TextStyle(
+                                    fontSize: 22,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                              ],
+                              ),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(
@@ -127,6 +124,8 @@ class _OfferContainerState extends State<OfferContainer> {
                                     color: Colors.grey,
                                   ),
                                   RichText(
+                                    softWrap: false,
+                                    overflow: TextOverflow.ellipsis,
                                     text: TextSpan(
                                       text: snapshot.data!.location,
                                       style: const TextStyle(
@@ -147,6 +146,8 @@ class _OfferContainerState extends State<OfferContainer> {
                                 bottom: 10,
                               ),
                               child: RichText(
+                                softWrap: false,
+                                overflow: TextOverflow.ellipsis,
                                 text: TextSpan(
                                   text: snapshot.data!
                                       .timeSinceUploadInDays()
