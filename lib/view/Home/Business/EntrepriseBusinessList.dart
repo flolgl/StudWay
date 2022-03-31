@@ -99,7 +99,7 @@ class _EntrepriseBusinessListState extends State<EntrepriseBusinessList> {
         indicatorColor: Colors.white,
         tabs:[
             Tab(
-              icon: Icon(Icons.favorite),
+              icon: Icon(Icons.task_outlined),
 
             ),
             Tab(
