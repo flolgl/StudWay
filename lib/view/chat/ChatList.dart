@@ -99,7 +99,9 @@ class _ChatListState extends State<ChatList>{
         cursor: SystemMouseCursors.click,
         child: GestureDetector(
           onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => ConversationView(conv)));
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => ConversationView(conv))).then((value) => setState(() {
+              _getConversations();
+            }));
           },
           child: Container(
             padding: const EdgeInsets.all(8.0),
